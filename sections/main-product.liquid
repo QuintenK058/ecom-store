@@ -125,10 +125,6 @@
             {%- when 'price' -%}
               <div class="pdp__price-row" {{ block.shopify_attributes }}>
                 {% render 'price', product: product, variant: current, size: 'large', show_save: true, js: true %}
-                {%- if block.settings.show_bnpl -%}
-                  {%- assign quarter = current.price | divided_by: 4.0 | ceil | money -%}
-                  <p class="pdp__bnpl">{{ 'products.bnpl_prefix' | t }} <span data-bnpl-amount>{{ quarter }}</span>{{ block.settings.bnpl_suffix | escape }}</p>
-                {%- endif -%}
               </div>
 
             {%- when 'benefits' -%}
@@ -262,6 +258,9 @@
                     </button>
                     {%- if block.settings.show_dynamic_checkout and settings.checkout_provider == 'shopify' -%}
                       {{ form | payment_button }}
+                    {%- endif -%}
+                    {%- if block.settings.show_installments -%}
+                      <div class="pdp__installments">{{ form | payment_terms }}</div>
                     {%- endif -%}
                   {%- endform -%}
                 </product-form>
@@ -397,10 +396,7 @@
       "type": "price",
       "name": "Price",
       "limit": 1,
-      "settings": [
-        { "type": "checkbox", "id": "show_bnpl", "label": "Show BNPL line", "default": true, "info": "Only enable if Shop Pay Installments / Afterpay / Klarna is active." },
-        { "type": "text", "id": "bnpl_suffix", "label": "BNPL suffix", "default": " with Shop Pay" }
-      ]
+      "settings": []
     },
     {
       "type": "benefits",
@@ -448,6 +444,7 @@
       "settings": [
         { "type": "text", "id": "label", "label": "Button label", "default": "Add to cart" },
         { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout (Shop Pay, Apple Pay, Google Pay)", "default": true },
+        { "type": "checkbox", "id": "show_installments", "label": "Show Shop Pay Installments banner", "default": true, "info": "Shopify's own banner; it shows only when Installments is active and the price qualifies." },
         { "type": "checkbox", "id": "show_stock", "label": "Show stock status (real inventory)", "default": true }
       ]
     },

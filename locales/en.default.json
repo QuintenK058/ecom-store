@@ -47,7 +47,6 @@
     "you_save": "You save {{ amount }}",
     "save_amount": "Save {{ amount }}",
     "per_unit": "{{ price }} each",
-    "bnpl_prefix": "Or 4 interest-free payments of",
     "color": "Color",
     "view_details": "View full details",
     "in_stock": "In stock, ready to ship",

@@ -48,7 +48,7 @@
 .pdp__title { font-size: var(--text-2xl); line-height: var(--leading-tight); }
 .pdp__subtitle { font-size: var(--text-md); color: var(--text-muted); margin-top: calc(var(--space-2) * -1); }
 .pdp__price-row { display: grid; gap: var(--space-1); }
-.pdp__bnpl { font-size: var(--text-sm); color: var(--text-muted); }
+.pdp__installments { font-size: var(--text-sm); color: var(--text-muted); }
 .benefits { list-style: none; padding: 0; display: grid; gap: var(--space-3); }
 .benefits li { display: grid; grid-template-columns: 28px 1fr; gap: var(--space-3); align-items: center; font-weight: var(--weight-medium); }
 .benefits .icon { color: var(--color-fir); }

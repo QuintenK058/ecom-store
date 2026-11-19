@@ -39,7 +39,7 @@ or legal — or removed. FTC: no claim ships without substantiation.
 - [ ] Founder story (homepage + About) — replace bracketed placeholder with the real story
 - [ ] "Ships to all 50 states / not outside US" (FAQ)
 - [ ] 10% off first order (popup, footer) — create the discount + Klaviyo/Shopify welcome flow
-- [ ] BNPL line ("4 interest-free payments … with Shop Pay") — only if Shop Pay Installments is enabled
+- [ ] Enable Shop Pay Installments in Settings → Payments if wanted (the PDP shows Shopify's own banner; no custom installment copy, per Shop Pay marketing rules)
 - [ ] Press logos — only add real coverage
 
 ## Legal (templates only — must be reviewed by you/a lawyer)

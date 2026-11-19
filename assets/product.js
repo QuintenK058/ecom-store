@@ -87,7 +87,6 @@
         el.hidden = !on;
         if (on) el.textContent = el.dataset.template.replace('[amount]', L.formatMoney(variant.compare_at_price - variant.price));
       });
-      document.querySelectorAll('[data-bnpl-amount]').forEach((el) => (el.textContent = L.formatMoney(Math.ceil(variant.price / 4))));
       document.querySelectorAll('[data-sticky-variant]').forEach((el) => (el.textContent = variant.title));
 
       // Gallery: jump to the variant's image.

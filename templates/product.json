@@ -5,7 +5,7 @@
       "blocks": {
         "rating": { "type": "rating", "settings": {} },
         "title": { "type": "title", "settings": {} },
-        "price": { "type": "price", "settings": { "show_bnpl": true, "bnpl_suffix": " with Shop Pay" } },
+        "price": { "type": "price", "settings": {} },
         "benefits": { "type": "benefits", "settings": { "fallback": "Lifts pills in one pass\nRigid guard keeps blades off the knit\nCharges with any USB-C cable\nSafe on cashmere, wool and fleece" } },
         "variants": { "type": "variant_picker", "settings": { "swatches": false } },
         "offer": {
@@ -19,7 +19,7 @@
             "note": "Bundle savings apply automatically at checkout."
           }
         },
-        "buy": { "type": "buy_buttons", "settings": { "label": "Add to cart", "show_dynamic_checkout": true, "show_stock": true } },
+        "buy": { "type": "buy_buttons", "settings": { "label": "Add to cart", "show_dynamic_checkout": true, "show_installments": true, "show_stock": true } },
         "delivery": { "type": "delivery", "settings": {} },
         "trust": { "type": "trust", "settings": { "text_1": "Free shipping over $60", "text_2": "Free 30-day returns", "text_3": "Secure checkout" } },
         "acc-details": { "type": "accordion", "settings": { "title": "Details & specs", "icon": "sparkle", "source": "details", "content": "<ul><li>[6] stainless blades, [2.4\"] head</li><li>Rigid stainless guard with [2] height settings</li><li>USB-C fast charge, works with any USB-C cable</li><li>[90 min] runtime per charge, [2 hr] full charge</li><li>Oversized twist-off lint chamber</li><li>Weight: [5.3 oz]</li></ul>" } },
