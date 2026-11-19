@@ -1,0 +1,5 @@
+# Files Shopify CLI should not push to the theme
+docs/
+README.md
+.gitkeep
+**/.gitkeep

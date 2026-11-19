@@ -1,0 +1,119 @@
+/*
+  Lastly design tokens.
+  Single source of truth for color, type, space, radius, shadow and motion.
+  Sections/snippets must consume these variables — never hard-code values.
+  Contrast ratios (WCAG 2.1) are noted next to each text pairing.
+*/
+
+:root {
+  /* ---------- Color: brand ---------- */
+  --color-fir: #1F3D34;            /* primary. on oat 10.42:1, white on fir 11.83:1 */
+  --color-fir-700: #163029;        /* hover/pressed */
+  --color-fir-100: #DCE5DD;        /* tint surface; fir on it 9.18:1 */
+  --color-persimmon: #B5461F;      /* accent. on oat 4.79:1, white on it 5.44:1 */
+  --color-persimmon-300: #E8835A;  /* decorative only (stars, dots); ink on it 6.41:1 */
+
+  /* ---------- Color: neutrals ---------- */
+  --color-oat: #F5F0E7;            /* page background */
+  --color-linen: #EBE4D7;          /* section/card background */
+  --color-white: #FFFFFF;
+  --color-ink: #1C1B19;            /* body text. on oat 15.16:1 */
+  --color-graphite: #57534B;       /* secondary text. on oat 6.74:1, on linen 6.05:1 */
+  --color-stone: #8C8475;          /* borders/dividers ONLY (3.26:1, non-text) */
+  --color-hairline: #DDD5C6;       /* subtle dividers */
+
+  /* ---------- Color: semantic ---------- */
+  --color-success: #2F6B3F;        /* on oat 5.61:1 */
+  --color-error: #B0302A;          /* on oat 5.60:1 */
+  --color-focus: #1F3D34;
+
+  /* ---------- Color: roles (use these in components) ---------- */
+  --bg: var(--color-oat);
+  --bg-raised: var(--color-linen);
+  --bg-inverse: var(--color-fir);
+  --text: var(--color-ink);
+  --text-muted: var(--color-graphite);
+  --text-inverse: var(--color-oat);
+  --border: var(--color-hairline);
+  --border-strong: var(--color-stone);
+  --cta-bg: var(--color-fir);
+  --cta-bg-hover: var(--color-fir-700);
+  --cta-text: var(--color-white);
+  --accent: var(--color-persimmon);
+
+  /* ---------- Type ---------- */
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Fluid modular scale: ~1.2 at 375px → ~1.333 at 1440px */
+  --text-xs: 0.75rem;                                   /* 12 — legal, badges */
+  --text-sm: 0.875rem;                                  /* 14 — meta, captions */
+  --text-base: 1rem;                                    /* 16 — body (never smaller on mobile inputs) */
+  --text-md: clamp(1.125rem, 1.08rem + 0.2vw, 1.25rem); /* 18–20 — lead */
+  --text-lg: clamp(1.375rem, 1.26rem + 0.5vw, 1.75rem); /* 22–28 — h4 / card titles */
+  --text-xl: clamp(1.75rem, 1.5rem + 1.1vw, 2.5rem);    /* 28–40 — h3 */
+  --text-2xl: clamp(2.125rem, 1.7rem + 1.9vw, 3.5rem);  /* 34–56 — h2 */
+  --text-3xl: clamp(2.625rem, 2rem + 2.8vw, 4.75rem);   /* 42–76 — hero h1 */
+
+  --leading-tight: 1.05;   /* display */
+  --leading-snug: 1.2;     /* headings */
+  --leading-normal: 1.55;  /* body */
+
+  --tracking-display: -0.02em;
+  --tracking-normal: 0;
+  --tracking-caps: 0.08em; /* eyebrow / small caps labels */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ---------- Space (4px base) ---------- */
+  --space-1: 0.25rem;  /* 4 */
+  --space-2: 0.5rem;   /* 8 */
+  --space-3: 0.75rem;  /* 12 */
+  --space-4: 1rem;     /* 16 — mobile gutter */
+  --space-5: 1.5rem;   /* 24 */
+  --space-6: 2rem;     /* 32 */
+  --space-7: 3rem;     /* 48 */
+  --space-8: 4rem;     /* 64 */
+  --space-9: 6rem;     /* 96 */
+  --space-10: 8rem;    /* 128 */
+  --section-y: clamp(3rem, 2rem + 4vw, 6rem);
+  --gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --container: 80rem;        /* 1280 */
+  --container-narrow: 45rem; /* 720 — text */
+
+  /* ---------- Radius ---------- */
+  --radius-sm: 4px;     /* inputs, chips */
+  --radius-md: 8px;     /* cards, images */
+  --radius-lg: 16px;    /* drawers, modals */
+  --radius-pill: 999px; /* buttons, badges */
+
+  /* ---------- Shadow (warm, low) ---------- */
+  --shadow-sm: 0 1px 2px rgb(28 27 25 / 0.06);
+  --shadow-md: 0 4px 16px rgb(28 27 25 / 0.08);
+  --shadow-lg: 0 12px 40px rgb(28 27 25 / 0.14); /* drawers */
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.3, 1);
+  --duration-fast: 150ms;  /* hovers, toggles */
+  --duration-base: 200ms;  /* accordions, fades */
+  --duration-slow: 250ms;  /* drawers */
+
+  /* ---------- Misc ---------- */
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--color-focus);
+  --tap-target: 44px;
+  --header-h: 64px;
+  --z-header: 30;
+  --z-drawer: 50;
+  --z-toast: 60;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
