@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "Will it put a hole in my sweater?", "answer": "<p>Not when used as directed. The guard is rigid, so it doesn't flex into the fabric. Use the higher setting on fine knits, glide without pressing, keep the fabric flat.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "Does it work on cashmere and merino?", "answer": "<p>Yes. Use the [higher] setting and light, small circles. Test on an inside seam first.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "Can I use it on my couch?", "answer": "<p>Yes, on most woven and knit upholstery. Avoid leather, velvet and anything with a raised pile.</p>" } },
+        "q4": { "type": "question", "settings": { "question": "How long does the battery last?", "answer": "<p>About [90 minutes] per charge. Charges with any USB-C cable in about [2 hours].</p>" } },
+        "q5": { "type": "question", "settings": { "question": "How often do I replace the blades?", "answer": "<p>About every [6 months] with regular use. Refills are $19 for two.</p>" } },
+        "q6": { "type": "question", "settings": { "question": "When will my order arrive?", "answer": "<p>Orders before [2pm ET] on business days ship [the same day]. US delivery takes [3–5] business days.</p>" } },
+        "q7": { "type": "question", "settings": { "question": "Do you ship outside the US?", "answer": "<p>[Not yet. We ship to all 50 states.]</p>" } },
+        "q8": { "type": "question", "settings": { "question": "What's your return policy?", "answer": "<p>Free 30-day returns, full refund. <a href=\"/pages/shipping-returns\">Details</a>.</p>" } },
+        "q9": { "type": "question", "settings": { "question": "Is there a warranty?", "answer": "<p>[1 year against defects.] Email us with your order number and a photo.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9"],
+      "settings": { "eyebrow": "FAQ", "heading": "Everything you'd <em>ask us.</em>", "text": "<p>Didn't find it? <a href=\"/pages/contact\">Email a human</a>.</p>", "open_first": true, "schema": true }
+    }
+  },
+  "order": ["faq"]
+}

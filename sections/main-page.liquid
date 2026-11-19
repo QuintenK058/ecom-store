@@ -1,0 +1,20 @@
+<div class="container container--narrow" {{ section.shopify_attributes }}>
+  <header class="page-header">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h1 class="h1">{{ page.title | escape }}</h1>
+  </header>
+  <div class="rte section--tight">{{ page.content }}</div>
+  {%- if section.settings.legal_notice -%}
+    <p class="form-message form-message--error mt-6">Template only — have a lawyer review this page before launch.</p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "checkbox", "id": "legal_notice", "label": "Show 'needs legal review' notice", "default": false }
+  ]
+}
+{% endschema %}

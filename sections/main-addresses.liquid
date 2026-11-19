@@ -1,0 +1,43 @@
+{%- paginate customer.addresses by 10 -%}
+<div class="container container--narrow section" {{ section.shopify_attributes }}>
+  <p><a class="link-arrow" href="{{ routes.account_url }}">{% render 'icon', name: 'chevron-left', class: 'icon--sm' %} {{ 'customer.back_to_account' | t }}</a></p>
+  <h1 class="h1 mb-4">{{ 'customer.addresses' | t }}</h1>
+  {%- for address in customer.addresses -%}
+    <div class="accordion">
+      <div class="stack-sm accordion__content">
+        {%- if address == customer.default_address -%}<span class="badge badge--success">{{ 'customer.default' | t }}</span>{%- endif -%}
+        <p>{{ address | format_address }}</p>
+        <details>
+          <summary class="link">{{ 'customer.edit' | t }}</summary>
+          {%- form 'customer_address', address, class: 'stack mt-4' -%}
+            <div class="field"><label for="Addr1-{{ address.id }}">{{ 'customer.address1' | t }}</label><input id="Addr1-{{ address.id }}" class="input" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1"></div>
+            <div class="field"><label for="Addr2-{{ address.id }}">{{ 'customer.address2' | t }}</label><input id="Addr2-{{ address.id }}" class="input" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2"></div>
+            <div class="field"><label for="City-{{ address.id }}">{{ 'customer.city' | t }}</label><input id="City-{{ address.id }}" class="input" name="address[city]" value="{{ form.city }}" autocomplete="address-level2"></div>
+            <div class="field"><label for="Country-{{ address.id }}">{{ 'customer.country' | t }}</label><select id="Country-{{ address.id }}" class="select" name="address[country]" autocomplete="country">{{ all_country_option_tags }}</select></div>
+            <div class="field"><label for="Province-{{ address.id }}">{{ 'customer.province' | t }}</label><input id="Province-{{ address.id }}" class="input" name="address[province]" value="{{ form.province }}" autocomplete="address-level1"></div>
+            <div class="field"><label for="Zip-{{ address.id }}">{{ 'customer.zip' | t }}</label><input id="Zip-{{ address.id }}" class="input" name="address[zip]" value="{{ form.zip }}" autocomplete="postal-code"></div>
+            <label class="checkbox">{{ form.set_as_default_checkbox }} {{ 'customer.set_default' | t }}</label>
+            <button type="submit" class="button">{{ 'customer.save' | t }}</button>
+          {%- endform -%}
+        </details>
+      </div>
+    </div>
+  {%- endfor -%}
+  {% render 'pagination', paginate: paginate %}
+  <details class="accordion mt-6">
+    <summary>{{ 'customer.add_address' | t }} {% render 'icon', name: 'plus', class: 'icon--plus' %}</summary>
+    {%- form 'customer_address', customer.new_address, class: 'stack accordion__content' -%}
+      <div class="field"><label for="NewAddr1">{{ 'customer.address1' | t }}</label><input id="NewAddr1" class="input" name="address[address1]" autocomplete="address-line1"></div>
+      <div class="field"><label for="NewAddr2">{{ 'customer.address2' | t }}</label><input id="NewAddr2" class="input" name="address[address2]" autocomplete="address-line2"></div>
+      <div class="field"><label for="NewCity">{{ 'customer.city' | t }}</label><input id="NewCity" class="input" name="address[city]" autocomplete="address-level2"></div>
+      <div class="field"><label for="NewCountry">{{ 'customer.country' | t }}</label><select id="NewCountry" class="select" name="address[country]" autocomplete="country">{{ all_country_option_tags }}</select></div>
+      <div class="field"><label for="NewProvince">{{ 'customer.province' | t }}</label><input id="NewProvince" class="input" name="address[province]" autocomplete="address-level1"></div>
+      <div class="field"><label for="NewZip">{{ 'customer.zip' | t }}</label><input id="NewZip" class="input" name="address[zip]" autocomplete="postal-code"></div>
+      <button type="submit" class="button">{{ 'customer.save' | t }}</button>
+    {%- endform -%}
+  </details>
+</div>
+{%- endpaginate -%}
+{% schema %}
+{ "name": "Addresses", "settings": [] }
+{% endschema %}

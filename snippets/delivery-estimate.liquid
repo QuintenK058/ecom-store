@@ -1,0 +1,15 @@
+{%- comment -%}
+  Calculated delivery estimate (business days, US Eastern cut-off, US federal holidays).
+  Logic lives in <delivery-estimate> (assets/global.js). Hidden until JS calculates — no fake dates.
+  Params: class (optional), compact: bool
+{%- endcomment -%}
+<delivery-estimate class="{{ class }}" hidden>
+  {% render 'icon', name: 'truck' %}
+  <span>
+    <span data-countdown-wrap hidden>Order in the next <strong data-countdown></strong>, </span>
+    {%- if compact %}arrives{% else %}get it{% endif %} <strong data-date></strong>
+    {%- unless compact -%}
+      <br><span class="text-muted">{{ settings.ship_min_days }}–{{ settings.ship_max_days }} business days</span>
+    {%- endunless -%}
+  </span>
+</delivery-estimate>

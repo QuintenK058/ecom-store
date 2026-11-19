@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "promo": { "type": "promo", "settings": { "heading": "The Pair: 2 for $89", "text": "One for you, one to give.", "label": "Get the Pair", "link": "shopify://products/lastly-shaver" } }
+      },
+      "block_order": ["promo"],
+      "settings": { "per_page": 12, "columns": "3", "enable_filtering": true, "enable_sort": true, "pagination": "load_more", "promo_position": 5 }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "Which one should I get?", "answer": "<p>Start with the shaver. Add a blade refill if you've got a big closet or a couch to rescue.</p>" } }
+      },
+      "block_order": ["q1"],
+      "settings": { "heading": "Good questions.", "schema": false }
+    }
+  },
+  "order": ["main", "faq"]
+}

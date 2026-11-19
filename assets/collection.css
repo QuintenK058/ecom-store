@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Collection + search — slim header, products above the fold on mobile.
+   ========================================================================== */
+.collection-header { padding-top: var(--space-5); padding-bottom: var(--space-4); display: grid; gap: var(--space-2); }
+.collection-header .h1 { font-size: var(--text-xl); }
+@media (min-width: 1024px) { .collection-header { padding-top: var(--space-7); padding-bottom: var(--space-6); } .collection-header .h1 { font-size: var(--text-2xl); } }
+
+.facets-bar { position: sticky; top: var(--header-offset, 0px); z-index: 5; background: var(--bg); display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); padding-block: var(--space-2); border-bottom: 1px solid var(--border); margin-bottom: var(--space-5); transition: top var(--duration-slow) var(--ease-out); }
+.facets-bar__count { font-size: var(--text-sm); color: var(--text-muted); }
+.facets-bar .button { min-height: 44px; }
+.facets-sort { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
+.facets-sort .select { min-height: 44px; width: auto; padding-block: 0; }
+.facets-sort label { white-space: nowrap; }
+
+.collection-layout { display: grid; gap: var(--space-6); }
+.facets-sidebar { display: none; }
+@media (min-width: 1024px) {
+  .facets-bar__filter-btn { display: none; }
+  .collection-layout--sidebar { grid-template-columns: 240px minmax(0, 1fr); gap: var(--space-7); }
+  .collection-layout--sidebar .facets-sidebar { display: block; position: sticky; top: calc(var(--header-offset, 0px) + 80px); align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; }
+}
+.facet { border-bottom: 1px solid var(--border); }
+.facet summary { display: flex; justify-content: space-between; align-items: center; min-height: 52px; cursor: pointer; list-style: none; font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+.facet summary::-webkit-details-marker { display: none; }
+.facet summary .icon { transition: transform var(--duration-base) var(--ease-out); }
+.facet[open] summary .icon { transform: rotate(180deg); }
+.facet__list { list-style: none; padding: 0 0 var(--space-4); display: grid; gap: 2px; }
+.facet__list .checkbox span:last-child { color: var(--text-muted); margin-left: auto; }
+.facet__list .checkbox.is-disabled { opacity: 0.45; }
+.facet__price { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); padding-bottom: var(--space-4); }
+.facet__swatches { display: flex; flex-wrap: wrap; gap: var(--space-2); padding-bottom: var(--space-4); }
+.active-facets { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4); }
+.active-facets:empty { display: none; }
+[data-facet-results][aria-busy="true"] { opacity: 0.5; transition: opacity var(--duration-base); pointer-events: none; }
+
+.grid-promo { grid-column: span 2; border-radius: var(--radius-md); overflow: hidden; position: relative; display: grid; align-content: end; padding: var(--space-5); background: var(--color-fir); color: var(--color-oat); min-height: 280px; text-decoration: none; }
+.grid-promo .media { position: absolute; inset: 0; border-radius: 0; }
+.grid-promo .media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(28 27 25 / 0) 20%, rgb(28 27 25 / 0.6) 100%); }
+.grid-promo__content { position: relative; display: grid; gap: var(--space-2); justify-items: start; }
+@media (min-width: 768px) { .grid-promo { grid-column: span 1; grid-row: span 1; } }
+
+.collection-footer { display: grid; justify-items: center; gap: var(--space-3); margin-top: var(--space-7); text-align: center; }
+.collection-footer__bar { width: 200px; height: 3px; background: var(--color-hairline); border-radius: var(--radius-pill); overflow: hidden; }
+.collection-footer__bar span { display: block; height: 100%; background: var(--color-fir); width: var(--progress, 0%); }
+.seo-text { margin-top: var(--section-y); border-top: 1px solid var(--border); padding-top: var(--space-5); }
+.seo-text summary { cursor: pointer; font-weight: var(--weight-semibold); min-height: var(--tap-target); display: flex; align-items: center; }
+.empty-state { display: grid; gap: var(--space-4); justify-items: center; text-align: center; padding-block: var(--space-8); }

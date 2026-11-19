@@ -1,0 +1,491 @@
+{%- comment -%}
+  PDP main section. Block order = mobile order (editable in the theme editor).
+  Per-product content comes from metafields (see docs/metafields.md):
+    custom.subtitle, custom.benefits, custom.details, custom.how_to_use, custom.whats_included,
+    custom.badge, custom.comparison, custom.faq, reviews.rating, reviews.rating_count
+{%- endcomment -%}
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign form_id = 'ProductForm-' | append: section.id
+  assign low_stock_threshold = section.settings.low_stock_threshold
+-%}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product.js' | asset_url }}" defer></script>
+
+<section class="pdp" data-product-section data-handle="{{ product.handle }}" {{ section.shopify_attributes }}>
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="{{ 'products.breadcrumb' | t }}">
+      <ol role="list">
+        <li><a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a></li>
+        {%- if collection -%}
+          <li><a href="{{ collection.url }}">{{ collection.title | escape }}</a></li>
+        {%- else -%}
+          <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
+        {%- endif -%}
+        <li aria-current="page">{{ product.title | escape }}</li>
+      </ol>
+    </nav>
+
+    <div class="pdp__grid">
+      {%- comment -%} ---------- Gallery ---------- {%- endcomment -%}
+      <product-gallery class="gallery" aria-roledescription="carousel" aria-label="{{ product.title | escape }} images">
+        <ul class="gallery__track" role="list" data-gallery-track tabindex="0" aria-label="Use arrow keys to browse images">
+          {%- for media in product.media -%}
+            <li
+              class="gallery__slide"
+              data-media-id="{{ media.id }}"
+              aria-roledescription="slide"
+              aria-label="{{ 'accessibility.slide' | t: index: forloop.index, count: product.media.size }}"
+            >
+              <div class="media">
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    {%- liquid
+                      if forloop.first
+                        assign img_loading = 'eager'
+                        assign img_priority = 'high'
+                      else
+                        assign img_loading = 'lazy'
+                        assign img_priority = 'auto'
+                      endif
+                    -%}
+                    {{
+                      media
+                      | image_url: width: 1800
+                      | image_tag: loading: img_loading, fetchpriority: img_priority, preload: forloop.first, widths: '375, 550, 750, 1000, 1400, 1800', sizes: '(min-width: 1024px) 55vw, 100vw', alt: media.alt | default: product.title
+                    }}
+                    <button
+                      type="button"
+                      class="gallery__zoom"
+                      data-zoom-open
+                      data-zoom-src="{{ media | image_url: width: 2400 }}"
+                      data-zoom-alt="{{ media.alt | default: product.title | escape }}"
+                      aria-label="Zoom image {{ forloop.index }}"
+                    ></button>
+                  {%- when 'video' -%}
+                    {{ media | video_tag: controls: true, playsinline: true, preload: 'metadata', muted: true, image_size: '1400x' }}
+                  {%- when 'external_video' -%}
+                    {{ media | external_video_tag: loading: 'lazy' }}
+                  {%- else -%}
+                    {{ media | media_tag }}
+                {%- endcase -%}
+              </div>
+            </li>
+          {%- else -%}
+            <li class="gallery__slide" data-media-id="0"><div class="media">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div></li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if product.media.size > 1 -%}
+          <span class="badge gallery__counter" data-gallery-counter aria-hidden="true">1 / {{ product.media.size }}</span>
+          <div class="gallery__arrows">
+            <button type="button" class="icon-button" data-gallery-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'chevron-left' %}</button>
+            <button type="button" class="icon-button" data-gallery-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'chevron-right' %}</button>
+          </div>
+          <div class="gallery__dots">
+            {%- for media in product.media -%}
+              <button type="button" class="gallery__dot" data-gallery-dot data-index="{{ forloop.index0 }}" aria-label="{{ 'accessibility.slide' | t: index: forloop.index, count: product.media.size }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}"></button>
+            {%- endfor -%}
+          </div>
+          <ul class="gallery__thumbs" role="list">
+            {%- for media in product.media limit: 12 -%}
+              <li>
+                <button type="button" class="gallery__thumb" data-gallery-thumb data-index="{{ forloop.index0 }}" aria-label="{{ 'accessibility.slide' | t: index: forloop.index, count: product.media.size }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+                  <span class="media">{{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', sizes: '90px', alt: '' }}</span>
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        <dialog class="zoom-dialog" data-zoom aria-label="Zoomed image">
+          <button type="button" class="icon-button zoom-dialog__close" data-zoom-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+          <div class="zoom-dialog__scroller"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="2400" height="2400" loading="lazy"></div>
+        </dialog>
+      </product-gallery>
+
+      {%- comment -%} ---------- Info (blocks) ---------- {%- endcomment -%}
+      <product-info class="pdp__info" data-product-title="{{ product.title | escape }}">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              <div {{ block.shopify_attributes }}>{% render block %}</div>
+
+            {%- when 'rating' -%}
+              <div {{ block.shopify_attributes }}>{% render 'rating', product: product, link: '#reviews' %}</div>
+
+            {%- when 'title' -%}
+              <div class="stack-sm" {{ block.shopify_attributes }}>
+                <h1 class="pdp__title">{{ product.title | escape }}</h1>
+                {%- if product.metafields.custom.subtitle != blank -%}
+                  <p class="pdp__subtitle">{{ product.metafields.custom.subtitle.value | escape }}</p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'price' -%}
+              <div class="pdp__price-row" {{ block.shopify_attributes }}>
+                {% render 'price', product: product, variant: current, size: 'large', show_save: true, js: true %}
+                {%- if block.settings.show_bnpl -%}
+                  {%- assign quarter = current.price | divided_by: 4.0 | ceil | money -%}
+                  <p class="pdp__bnpl">{{ 'products.bnpl_prefix' | t }} <span data-bnpl-amount>{{ quarter }}</span>{{ block.settings.bnpl_suffix | escape }}</p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'benefits' -%}
+              {%- liquid
+                assign benefits = product.metafields.custom.benefits.value
+                if benefits == blank
+                  assign benefits = block.settings.fallback | newline_to_br | split: '<br />'
+                endif
+              -%}
+              {%- if benefits.size > 0 -%}
+                <ul class="benefits" role="list" {{ block.shopify_attributes }}>
+                  {%- for b in benefits limit: 4 -%}
+                    {%- assign b_clean = b | strip -%}
+                    {%- if b_clean != blank -%}
+                      <li>{% render 'icon', name: 'check' %}<span>{{ b_clean | escape }}</span></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <variant-picker {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                    {%- assign opt_down = option.name | downcase -%}
+                    {%- assign is_color = false -%}
+                    {%- if opt_down == 'color' or opt_down == 'colour' -%}{%- assign is_color = true -%}{%- endif -%}
+                    <fieldset class="option">
+                      <legend>{{ option.name | escape }}: <span data-selected-value>{{ option.selected_value | escape }}</span></legend>
+                      <div class="option__values">
+                        {%- for value in option.values -%}
+                          {%- assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                          <input type="radio" id="{{ input_id }}" name="option-{{ option.position }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                          {%- if is_color and block.settings.swatches -%}
+                            <label
+                              for="{{ input_id }}"
+                              class="option__btn option__btn--swatch"
+                              {% if value.swatch.color %}style="--swatch: {{ value.swatch.color }};"{% endif %}
+                              title="{{ value | escape }}"
+                              data-sold-out="{% unless value.available %}true{% else %}false{% endunless %}"
+                            ><span class="visually-hidden">{{ value | escape }}{% unless value.available %}, {{ 'products.sold_out' | t }}{% endunless %}</span></label>
+                          {%- else -%}
+                            <label for="{{ input_id }}" class="option__btn" data-sold-out="{% unless value.available %}true{% else %}false{% endunless %}">
+                              {{- value | escape -}}
+                              {%- unless value.available %}<span class="visually-hidden">, {{ 'products.sold_out' | t }}</span>{% endunless -%}
+                            </label>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
+                </variant-picker>
+              {%- else -%}
+                <script type="application/json" data-variants-json>{{ product.variants | json }}</script>
+              {%- endunless -%}
+
+            {%- when 'offer' -%}
+              {%- liquid
+                assign tiers = '1,2,3' | split: ','
+              -%}
+              <offer-tiers data-form="{{ form_id }}" {{ block.shopify_attributes }}>
+                <fieldset class="offer">
+                  <legend>{{ block.settings.heading | escape }}</legend>
+                  {%- for t in tiers -%}
+                    {%- liquid
+                      assign qkey = 'tier' | append: t | append: '_qty'
+                      assign lkey = 'tier' | append: t | append: '_label'
+                      assign skey = 'tier' | append: t | append: '_sub'
+                      assign dkey = 'tier' | append: t | append: '_amount_off'
+                      assign bkey = 'tier' | append: t | append: '_badge'
+                      assign qty = block.settings[qkey]
+                      assign amount_off = block.settings[dkey] | default: 0 | times: 100
+                      if qty == blank or qty == 0
+                        continue
+                      endif
+                      assign full = current.price | times: qty
+                      assign total = full | minus: amount_off
+                      assign each = total | divided_by: qty | round
+                      assign each_template = 'products.per_unit' | t: price: '[price]'
+                      assign each_money = each | money
+                    -%}
+                    <div class="offer-tier">
+                      <input type="radio" name="offer-{{ section.id }}" id="offer-{{ section.id }}-{{ t }}" value="{{ qty }}" data-amount-off="{{ amount_off }}" data-total-formatted="{{ total | money }}" {% if t == block.settings.default_tier %}checked{% endif %}>
+                      <label for="offer-{{ section.id }}-{{ t }}">
+                        <span>
+                          <span class="offer-tier__title">{{ block.settings[lkey] | escape }}</span>
+                          {%- if qty > 1 -%}
+                            <br><span class="offer-tier__sub" data-tier-each data-template="{{ each_template | escape }}">{{ 'products.per_unit' | t: price: each_money }}</span>
+                          {%- elsif block.settings[skey] != blank -%}
+                            <br><span class="offer-tier__sub">{{ block.settings[skey] | escape }}</span>
+                          {%- endif -%}
+                        </span>
+                        <span class="offer-tier__price">
+                          <span data-tier-total>{{ total | money }}</span>
+                          <s class="offer-tier__compare" data-tier-compare>{% if amount_off > 0 %}{{ full | money }}{% endif %}</s>
+                        </span>
+                      </label>
+                      {%- if block.settings[bkey] != blank -%}
+                        <span class="badge {% if forloop.index == 2 %}badge--accent{% else %}badge--primary{% endif %}">{{ block.settings[bkey] | escape }}</span>
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                </fieldset>
+                {%- if block.settings.note != blank -%}<p class="text-xs text-muted mt-2">{{ block.settings.note | escape }}</p>{%- endif -%}
+              </offer-tiers>
+
+            {%- when 'buy_buttons' -%}
+              <div class="pdp__buy" data-main-atc {{ block.shopify_attributes }}>
+                {%- if block.settings.show_stock and current.inventory_management == 'shopify' and current.available -%}
+                  {%- if current.inventory_quantity > 0 and current.inventory_quantity <= low_stock_threshold -%}
+                    <p class="pdp__stock pdp__stock--low">{{ 'products.low_stock' | t: count: current.inventory_quantity }}</p>
+                  {%- elsif current.inventory_quantity > 0 -%}
+                    <p class="pdp__stock">{{ 'products.in_stock' | t }}</p>
+                  {%- endif -%}
+                {%- endif -%}
+                <product-form>
+                  {%- form 'product', product, id: form_id, data-product-form: '', novalidate: 'novalidate' -%}
+                    <input type="hidden" name="id" value="{{ current.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button
+                      type="submit"
+                      class="button button--full button--large"
+                      data-atc-button
+                      data-track="pdp-atc"
+                      {% unless current.available %}disabled{% endunless %}
+                    >
+                      <span data-atc-label data-default-label="{{ block.settings.label | default: 'Add to cart' | escape }}">
+                        {%- if current.available -%}{{ block.settings.label | default: 'Add to cart' | escape }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+                      </span>
+                    </button>
+                    {%- if block.settings.show_dynamic_checkout and settings.checkout_provider == 'shopify' -%}
+                      {{ form | payment_button }}
+                    {%- endif -%}
+                  {%- endform -%}
+                </product-form>
+              </div>
+
+            {%- when 'delivery' -%}
+              <div {{ block.shopify_attributes }}>{% render 'delivery-estimate', class: 'pdp__delivery' %}</div>
+
+            {%- when 'trust' -%}
+              <ul class="trust-row" role="list" {{ block.shopify_attributes }}>
+                <li>{% render 'icon', name: 'truck' %}{{ block.settings.text_1 | escape }}</li>
+                <li>{% render 'icon', name: 'return' %}{{ block.settings.text_2 | escape }}</li>
+                <li>{% render 'icon', name: 'lock' %}{{ block.settings.text_3 | escape }}</li>
+              </ul>
+
+            {%- when 'accordion' -%}
+              {%- liquid
+                assign content = blank
+                case block.settings.source
+                  when 'details'
+                    assign content = product.metafields.custom.details | metafield_tag
+                  when 'how_to_use'
+                    assign content = product.metafields.custom.how_to_use | metafield_tag
+                  when 'whats_included'
+                    assign content = product.metafields.custom.whats_included | metafield_tag
+                  when 'description'
+                    assign content = product.description
+                endcase
+                if content == blank
+                  assign content = block.settings.content
+                endif
+              -%}
+              {%- if content != blank -%}
+                <details class="accordion" {{ block.shopify_attributes }}>
+                  <summary>
+                    <span class="accordion__title-wrap">{% render 'icon', name: block.settings.icon %} {{ block.settings.title | escape }}</span>
+                    {% render 'icon', name: 'plus', class: 'icon--plus' %}
+                  </summary>
+                  <div class="accordion__content rte">{{ content }}</div>
+                </details>
+              {%- endif -%}
+
+            {%- when 'text' -%}
+              <div class="rte text-muted" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+            {%- when 'custom_liquid' -%}
+              <div {{ block.shopify_attributes }}>{{ block.settings.liquid }}</div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </product-info>
+    </div>
+  </div>
+
+  {%- comment -%} ---------- Sticky ATC (mobile) ---------- {%- endcomment -%}
+  <sticky-atc class="sticky-atc" aria-hidden="true" inert>
+    <div class="sticky-atc__inner">
+      <div class="sticky-atc__info">
+        <span class="sticky-atc__title">{{ product.title | escape }}</span>
+        <span class="sticky-atc__meta">
+          {%- unless product.has_only_default_variant -%}<span data-sticky-variant>{{ current.title | escape }}</span> · {% endunless -%}
+          <span data-atc-total>{{ current.price | money }}</span>
+        </span>
+      </div>
+      <button type="submit" form="{{ form_id }}" class="button" data-atc-button data-track="pdp-sticky-atc" {% unless current.available %}disabled{% endunless %}>
+        <span data-atc-label data-default-label="{{ 'products.add_to_cart' | t }}">{% if current.available %}{{ 'products.add_to_cart' | t }}{% else %}{{ 'products.sold_out' | t }}{% endif %}</span>
+      </button>
+    </div>
+  </sticky-atc>
+</section>
+
+{%- comment -%} ---------- Structured data ---------- {%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {%- if product.featured_media -%}
+      "image": [{{ product.featured_media | image_url: width: 1200 | prepend: 'https:' | json }}],
+    {%- endif -%}
+    "description": {{ product.description | strip_html | truncate: 500 | json }},
+    {%- if current.sku != blank -%}"sku": {{ current.sku | json }},{%- endif -%}
+    "brand": { "@type": "Brand", "name": {{ product.vendor | json }} },
+    {%- if rating != blank and rating_count > 0 -%}
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": {{ rating.rating | default: rating | json }},
+        "reviewCount": {{ rating_count | json }}
+      },
+    {%- endif -%}
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type": "Offer",
+          {%- if variant.sku != blank -%}"sku": {{ variant.sku | json }},{%- endif -%}
+          "name": {{ variant.title | json }},
+          "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "url": {{ request.origin | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ request.origin | json }} },
+      { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ request.origin | append: product.url | json }} }
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "class": "section-main-product",
+  "settings": [
+    { "type": "range", "id": "low_stock_threshold", "label": "Low stock message at or below", "min": 1, "max": 20, "step": 1, "default": 5, "info": "Uses real inventory only." }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    { "type": "rating", "name": "Rating", "limit": 1, "settings": [] },
+    { "type": "title", "name": "Title + subtitle", "limit": 1, "settings": [] },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_bnpl", "label": "Show BNPL line", "default": true, "info": "Only enable if Shop Pay Installments / Afterpay / Klarna is active." },
+        { "type": "text", "id": "bnpl_suffix", "label": "BNPL suffix", "default": " with Shop Pay" }
+      ]
+    },
+    {
+      "type": "benefits",
+      "name": "Benefit bullets",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Reads custom.benefits (list of text). Fallback below, one per line." },
+        { "type": "textarea", "id": "fallback", "label": "Fallback bullets", "default": "Lifts pills in one pass\nGuard keeps blades off the knit\nCharges with any USB-C cable\nLooks-new results in minutes" }
+      ]
+    },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1, "settings": [{ "type": "checkbox", "id": "swatches", "label": "Show color options as swatches", "default": false }] },
+    {
+      "type": "offer",
+      "name": "Quantity offer",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Amount off must match an automatic discount in Shopify admin → Discounts (Amount off products, minimum quantity), or customers see a different price at checkout." },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Choose your bundle" },
+        { "type": "select", "id": "default_tier", "label": "Pre-selected tier", "options": [{ "value": "1", "label": "Tier 1" }, { "value": "2", "label": "Tier 2" }, { "value": "3", "label": "Tier 3" }], "default": "1" },
+        { "type": "header", "content": "Tier 1" },
+        { "type": "number", "id": "tier1_qty", "label": "Quantity", "default": 1 },
+        { "type": "text", "id": "tier1_label", "label": "Label", "default": "1 Shaver" },
+        { "type": "text", "id": "tier1_sub", "label": "Sub-label", "default": "For your closet" },
+        { "type": "number", "id": "tier1_amount_off", "label": "Amount off bundle (whole $)", "default": 0 },
+        { "type": "text", "id": "tier1_badge", "label": "Badge" },
+        { "type": "header", "content": "Tier 2" },
+        { "type": "number", "id": "tier2_qty", "label": "Quantity", "default": 2 },
+        { "type": "text", "id": "tier2_label", "label": "Label", "default": "The Pair" },
+        { "type": "text", "id": "tier2_sub", "label": "Sub-label", "default": "One for you, one to give" },
+        { "type": "number", "id": "tier2_amount_off", "label": "Amount off bundle (whole $)", "default": 9, "info": "$9 off 2 = $89 at $49 each." },
+        { "type": "text", "id": "tier2_badge", "label": "Badge", "default": "Most popular" },
+        { "type": "header", "content": "Tier 3 (set quantity 0 to hide)" },
+        { "type": "number", "id": "tier3_qty", "label": "Quantity", "default": 3 },
+        { "type": "text", "id": "tier3_label", "label": "Label", "default": "Family pack" },
+        { "type": "text", "id": "tier3_sub", "label": "Sub-label" },
+        { "type": "number", "id": "tier3_amount_off", "label": "Amount off bundle (whole $)", "default": 28, "info": "$28 off 3 = $119 at $49 each." },
+        { "type": "text", "id": "tier3_badge", "label": "Badge", "default": "Best value" },
+        { "type": "text", "id": "note", "label": "Note under tiers", "default": "Bundle savings apply automatically at checkout." }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Button label", "default": "Add to cart" },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout (Shop Pay, Apple Pay, Google Pay)", "default": true },
+        { "type": "checkbox", "id": "show_stock", "label": "Show stock status (real inventory)", "default": true }
+      ]
+    },
+    { "type": "delivery", "name": "Delivery estimate", "limit": 1, "settings": [] },
+    {
+      "type": "trust",
+      "name": "Trust row",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "text_1", "label": "Item 1", "default": "Free shipping over $60" },
+        { "type": "text", "id": "text_2", "label": "Item 2", "default": "Free 30-day returns" },
+        { "type": "text", "id": "text_3", "label": "Item 3", "default": "Secure checkout" }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Details" },
+        { "type": "select", "id": "icon", "label": "Icon", "options": [{ "value": "sparkle", "label": "Sparkle" }, { "value": "blade", "label": "Blade" }, { "value": "gift", "label": "Gift" }, { "value": "truck", "label": "Truck" }, { "value": "shield", "label": "Shield" }, { "value": "sweater", "label": "Sweater" }], "default": "sparkle" },
+        {
+          "type": "select",
+          "id": "source",
+          "label": "Content source",
+          "options": [
+            { "value": "content", "label": "Text below" },
+            { "value": "description", "label": "Product description" },
+            { "value": "details", "label": "Metafield: custom.details" },
+            { "value": "how_to_use", "label": "Metafield: custom.how_to_use" },
+            { "value": "whats_included", "label": "Metafield: custom.whats_included" }
+          ],
+          "default": "content"
+        },
+        { "type": "richtext", "id": "content", "label": "Text (or fallback)" }
+      ]
+    },
+    { "type": "text", "name": "Text", "settings": [{ "type": "richtext", "id": "text", "label": "Text" }] },
+    { "type": "custom_liquid", "name": "Custom Liquid", "settings": [{ "type": "liquid", "id": "liquid", "label": "Liquid" }] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,58 @@
+{%- comment -%} Rendered via /search/suggest?section_id=predictive-search {%- endcomment -%}
+<div data-predictive-content>
+  {%- if predictive_search.performed -%}
+    {%- if predictive_search.resources.queries.size > 0 -%}
+      <p class="eyebrow">{{ 'search.suggestions' | t }}</p>
+      <div class="cluster mt-2 mb-4">
+        {%- for query in predictive_search.resources.queries -%}
+          <a class="chip" href="{{ query.url }}">{{ query.styled_text }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <p class="eyebrow">{{ 'search.products' | t }}</p>
+      <ul class="predictive-results__list" role="listbox" aria-label="{{ 'search.products' | t }}">
+        {%- for product in predictive_search.resources.products -%}
+          <li>
+            <a class="predictive-item" href="{{ product.url }}" role="option" aria-selected="false" id="predictive-product-{{ forloop.index }}" data-track="search-result">
+              <div class="media media--square">
+                {%- if product.featured_media -%}
+                  {{ product.featured_media | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '64px', alt: '' }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <div>
+                <p class="cart-item__title">{{ product.title | escape }}</p>
+                {% render 'price', product: product %}
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if predictive_search.resources.pages.size > 0 -%}
+      <p class="eyebrow mt-4">{{ 'search.pages' | t }}</p>
+      <ul class="predictive-results__list" role="listbox" aria-label="{{ 'search.pages' | t }}">
+        {%- for page in predictive_search.resources.pages -%}
+          <li><a class="predictive-item" href="{{ page.url }}" role="option" aria-selected="false" id="predictive-page-{{ forloop.index }}"><span></span><span>{{ page.title | escape }}</span></a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <p class="mt-4">
+      <a class="link-arrow" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product">
+        {{- 'search.view_all' | t }} {% render 'icon', name: 'arrow-right', class: 'icon--sm' -%}
+      </a>
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Predictive search",
+  "settings": []
+}
+{% endschema %}

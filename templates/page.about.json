@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "About Lastly" } },
+        "h": { "type": "heading", "settings": { "text": "Good clothes deserve a <em>second winter.</em>" } },
+        "t": { "type": "text", "settings": { "text": "<p>Most sweaters don't wear out. They pill, start to look tired, and get replaced. We make one tool that fixes that, safely, so the clothes you already love stay in rotation.</p>" } }
+      },
+      "block_order": ["e", "h", "t"],
+      "settings": { "center": true, "style": "none" }
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "Why we started" } },
+        "h": { "type": "heading", "settings": { "text": "I almost threw out my <em>favorite</em> sweater." } },
+        "t": { "type": "text", "settings": { "text": "<p>[Founder story: the sweater, the moment you realized it was just pilled, what went wrong with the cheap shavers, and what you set out to build. Keep it to 3 short paragraphs. Real details beat big claims.]</p>" } },
+        "s": { "type": "signature", "settings": { "text": "— [Founder name], founder" } }
+      },
+      "block_order": ["e", "h", "t", "s"],
+      "settings": { "ratio": "portrait", "reverse": false, "style": "raised" }
+    },
+    "values": {
+      "type": "how-it-works",
+      "blocks": {
+        "v1": { "type": "step", "settings": { "icon": "shield", "title": "Safe first", "text": "If it can damage a good sweater, we don't ship it." } },
+        "v2": { "type": "step", "settings": { "icon": "leaf", "title": "Keep, don't replace", "text": "The most sustainable sweater is the one you already own." } },
+        "v3": { "type": "step", "settings": { "icon": "chat", "title": "Humans answer", "text": "Email us and a real person replies within one business day." } }
+      },
+      "block_order": ["v1", "v2", "v3"],
+      "settings": { "eyebrow": "What we believe", "heading": "Three rules.", "numbered": false, "style": "none" }
+    },
+    "final": { "type": "final-cta", "settings": { "heading": "Keep the sweater. <em>Lose the pills.</em>", "cta_label": "Get my Lastly", "cta_link": "shopify://products/lastly-shaver", "show_email": false } }
+  },
+  "order": ["intro", "story", "values", "final"]
+}

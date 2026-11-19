@@ -1,0 +1,26 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg-1": { "type": "message", "settings": { "text": "Free US shipping on orders over $60", "link": "" } },
+        "msg-2": { "type": "message", "settings": { "text": "Free 30-day returns. Try it on your favorite sweater.", "link": "" } },
+        "msg-3": { "type": "message", "settings": { "text": "The Pair: 2 shavers for $89. One for you, one to give.", "link": "shopify://products/lastly-shaver" } }
+      },
+      "block_order": ["msg-1", "msg-2", "msg-3"],
+      "settings": { "speed": 5 }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "secondary_menu": "footer",
+        "featured_product": "lastly-shaver",
+        "feature_label": "Start here"
+      }
+    }
+  },
+  "order": ["announcement", "header"]
+}

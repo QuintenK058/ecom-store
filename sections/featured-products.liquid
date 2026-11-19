@@ -1,0 +1,54 @@
+{%- liquid
+  assign s = section.settings
+  assign limit = s.limit
+-%}
+<section class="section{% if s.raised %} section--raised{% endif %}" id="shop" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="section-header{% if s.center %} section-header--center{% endif %}">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h1">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="lead">{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <ul class="product-grid{% if s.columns == 4 %} product-grid--4{% endif %}{% if s.columns == 2 %} product-grid--featured{% endif %}" role="list">
+      {%- if s.collection != blank and s.collection.products.size > 0 -%}
+        {%- for product in s.collection.products limit: limit -%}
+          <li>{% render 'product-card', product: product, track: 'home-grid', loading: 'lazy' %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          <li>
+            <div class="card">
+              <div class="media media--portrait">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+              <p class="card__title">Product name</p>
+              <p class="price">$49.00</p>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    {%- if s.button_label != blank and s.collection != blank -%}
+      <p class="center mt-6">
+        <a class="button button--secondary" href="{{ s.collection.url }}" data-track="home-grid-view-all">{{ s.button_label | escape }}</a>
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "class": "section-products",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Shop" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "One shaver. <em>Every</em> sweater." },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products", "min": 2, "max": 12, "step": 1, "default": 2 },
+    { "type": "select", "id": "columns", "label": "Desktop columns", "options": [{ "value": "2", "label": "2 (spotlight)" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }], "default": "2" },
+    { "type": "text", "id": "button_label", "label": "View all button" },
+    { "type": "checkbox", "id": "center", "label": "Center heading", "default": false },
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": false }
+  ],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

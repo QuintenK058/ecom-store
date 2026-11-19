@@ -1,0 +1,112 @@
+{%- comment -%}
+  Reviews / UGC. Three sources, in priority order:
+  1. App block (Judge.me / Okendo / Yotpo widgets) — preferred once you have reviews.
+  2. "Review" blocks: hand-entered REAL customer reviews (with permission). Never invent.
+  3. Nothing: the section hides itself.
+  Average + count come from product.metafields.reviews.* (written by the review app).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign rp = s.product | default: product
+  assign manual = section.blocks | where: 'type', 'review'
+  assign apps = section.blocks | where: 'type', '@app'
+-%}
+{%- if manual.size > 0 or apps.size > 0 or request.design_mode -%}
+  <section class="section{% if s.raised %} section--raised{% endif %}" id="reviews" {{ section.shopify_attributes }}>
+    <div class="container">
+      <div class="section-header">
+        {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+        <h2 class="h1">{{ s.heading }}</h2>
+        {%- if rp != blank -%}
+          {%- assign r = rp.metafields.reviews.rating.value -%}
+          {%- if r != blank -%}
+            <div class="reviews-summary">
+              <span class="reviews-summary__score">{{ r.rating | default: r | round: 1 }}</span>
+              {% render 'rating', product: rp %}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- for block in apps -%}
+        <div {{ block.shopify_attributes }}>{% render block %}</div>
+      {%- endfor -%}
+
+      {%- if manual.size > 0 -%}
+        <slider-component>
+          <ul class="slider" role="list" data-slider-track aria-label="{{ s.heading | strip_html | escape }}">
+            {%- for block in manual -%}
+              {%- assign b = block.settings -%}
+              <li {{ block.shopify_attributes }}>
+                <figure class="review-card">
+                  {%- if b.video != blank -%}
+                    {{ b.video | video_tag: controls: true, preload: 'none', playsinline: true, muted: true, image_size: '600x' }}
+                  {%- elsif b.image -%}
+                    <div class="media">
+                      {{ b.image | image_url: width: 700 | image_tag: loading: 'lazy', widths: '300, 500, 700', sizes: '(min-width: 768px) 33vw, 85vw', alt: b.image.alt | default: 'Customer photo' }}
+                    </div>
+                  {%- endif -%}
+                  <span class="rating__stars" style="--pct: {{ b.stars | times: 20 }}%;" aria-hidden="true"></span>
+                  <span class="visually-hidden">{{ 'accessibility.star_rating' | t: rating: b.stars }}</span>
+                  {%- if b.title != blank -%}<p class="h4">{{ b.title | escape }}</p>{%- endif -%}
+                  <blockquote class="review-card__quote">{{ b.quote | escape }}</blockquote>
+                  <figcaption class="stack-sm">
+                    <span class="review-card__author">{{ b.author | escape }}</span>
+                    {%- if b.verified -%}
+                      <span class="review-card__verified">{% render 'icon', name: 'verified', class: 'icon--sm' %} Verified buyer</span>
+                    {%- endif -%}
+                    {%- if b.incentivized -%}
+                      <span class="text-xs text-muted">Received a free product for an honest review.</span>
+                    {%- endif -%}
+                  </figcaption>
+                </figure>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if manual.size > 1 -%}
+            <div class="slider-controls">
+              <button type="button" class="icon-button" data-slider-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'chevron-left' %}</button>
+              <button type="button" class="icon-button" data-slider-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'chevron-right' %}</button>
+            </div>
+          {%- endif -%}
+        </slider-component>
+      {%- elsif apps.size == 0 and request.design_mode -%}
+        <p class="form-message form-message--error">
+          Editor-only note: add real reviews (Review blocks) or a review app block. This section stays hidden on the live store until you do.
+        </p>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Reviews & UGC",
+  "class": "section-reviews",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Reviews" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Sweaters, <em>saved.</em>" },
+    { "type": "product", "id": "product", "label": "Product for rating summary", "info": "Defaults to the current product on PDP." },
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": true }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "review",
+      "name": "Review (real only)",
+      "settings": [
+        { "type": "paragraph", "content": "FTC: only real reviews, with the customer's permission. Disclose free product or payment." },
+        { "type": "range", "id": "stars", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "quote", "label": "Review text" },
+        { "type": "text", "id": "author", "label": "Name (e.g. Sarah K., Denver)" },
+        { "type": "checkbox", "id": "verified", "label": "Verified buyer", "default": true },
+        { "type": "checkbox", "id": "incentivized", "label": "Received free product / compensation", "default": false },
+        { "type": "image_picker", "id": "image", "label": "Customer photo" },
+        { "type": "video", "id": "video", "label": "Customer video" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Reviews & UGC" }]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+<article class="container container--narrow section" {{ section.shopify_attributes }}>
+  <header class="page-header">
+    <p class="text-sm text-muted">{{ article.published_at | date: '%a, %b %-d, %Y' }} · {{ article.author | escape }}</p>
+    <h1 class="h1">{{ article.title | escape }}</h1>
+  </header>
+  {%- if article.image -%}
+    <div class="media media--landscape mb-4">
+      {{ article.image | image_url: width: 1600 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1600', sizes: '(min-width: 768px) 720px, 100vw', alt: article.image.alt | default: '' }}
+    </div>
+  {%- endif -%}
+  <div class="rte">{{ article.content }}</div>
+  <p class="mt-6"><a class="link-arrow" href="{{ blog.url }}">{% render 'icon', name: 'chevron-left', class: 'icon--sm' %} {{ 'blogs.back' | t: title: blog.title }}</a></p>
+</article>
+
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

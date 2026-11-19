@@ -1,0 +1,61 @@
+{%- comment -%}
+  Email capture: exit-intent on desktop, after N seconds or 50% scroll on mobile.
+  Frequency-capped via localStorage. Submits to Shopify customers (tag: newsletter) —
+  Klaviyo's Shopify integration syncs these profiles; or paste a Klaviyo form embed in the custom block.
+{%- endcomment -%}
+{%- if section.settings.enabled -%}
+  <newsletter-popup data-delay="{{ section.settings.delay }}" data-cap-days="{{ section.settings.cap_days }}" {{ section.shopify_attributes }}>
+    <modal-drawer id="NewsletterPopup" class="popup" aria-hidden="true">
+      <div class="drawer__overlay" data-drawer-close></div>
+      <div class="popup__panel" role="dialog" aria-modal="true" aria-labelledby="NewsletterPopupTitle">
+        <button type="button" class="icon-button popup__close" data-drawer-close aria-label="{{ 'accessibility.dismiss' | t }}">{% render 'icon', name: 'close' %}</button>
+        <div class="popup__media">
+          <div class="media">
+            {%- if section.settings.image -%}
+              {{ section.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '400, 600, 800', sizes: '380px', alt: section.settings.image.alt }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+        </div>
+        <div class="popup__content">
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          <h2 class="h1" id="NewsletterPopupTitle">{{ section.settings.heading }}</h2>
+          <p class="text-muted">{{ section.settings.text | escape }}</p>
+          {%- if section.settings.klaviyo_embed != blank -%}
+            {{ section.settings.klaviyo_embed }}
+          {%- else -%}
+            {%- form 'customer', id: 'PopupNewsletter', class: 'stack-sm' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter,popup">
+              <label class="visually-hidden" for="PopupEmail">{{ 'newsletter.label' | t }}</label>
+              <input id="PopupEmail" class="input" type="email" name="contact[email]" autocomplete="email" placeholder="{{ 'newsletter.placeholder' | t }}" required data-autofocus>
+              <button type="submit" class="button button--full" data-track="popup-submit">{{ section.settings.button | escape }}</button>
+              {%- if form.posted_successfully? -%}
+                <p class="form-message form-message--success" role="status">{{ 'newsletter.success' | t }}</p>
+              {%- endif -%}
+            {%- endform -%}
+          {%- endif -%}
+          <button type="button" class="link text-sm text-muted" data-drawer-close>{{ section.settings.decline | escape }}</button>
+        </div>
+      </div>
+    </modal-drawer>
+  </newsletter-popup>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Email popup",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Enable popup", "default": true },
+    { "type": "range", "id": "delay", "label": "Mobile: show after", "min": 5, "max": 60, "step": 5, "unit": "s", "default": 15, "info": "Also triggers at 50% scroll on mobile. Desktop uses exit-intent." },
+    { "type": "range", "id": "cap_days", "label": "Show at most once every", "min": 1, "max": 60, "step": 1, "unit": "d", "default": 14 },
+    { "type": "image_picker", "id": "image", "label": "Image (desktop)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Before you go" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>Take <em>10% off</em> your first order.</p>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Plus one email a month on keeping good clothes good. No spam." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Get my 10% off" },
+    { "type": "text", "id": "decline", "label": "Decline link", "default": "No thanks, I'll pay full price" },
+    { "type": "html", "id": "klaviyo_embed", "label": "Klaviyo form embed (optional)", "info": "Paste a Klaviyo embed to replace the Shopify form." }
+  ]
+}
+{% endschema %}

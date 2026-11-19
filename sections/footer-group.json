@@ -1,0 +1,20 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "col-shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "main-menu" } },
+        "col-help": { "type": "menu", "settings": { "heading": "Help", "menu": "footer" } }
+      },
+      "block_order": ["col-shop", "col-help"],
+      "settings": {}
+    },
+    "popup": {
+      "type": "newsletter-popup",
+      "settings": { "enabled": true, "delay": 15, "cap_days": 14 }
+    }
+  },
+  "order": ["footer", "popup"]
+}

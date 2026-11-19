@@ -1,0 +1,75 @@
+{%- assign s = section.settings -%}
+<section class="section{% if s.style == 'tint' %} section--tint{% elsif s.style == 'raised' %} section--raised{% endif %}" id="how-it-works" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="section-header section-header--center">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h1">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="lead">{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+    <ol class="feature-grid" role="list">
+      {%- for block in section.blocks -%}
+        <li class="feature" {{ block.shopify_attributes }}>
+          {%- if block.settings.image -%}
+            <div class="media media--portrait">
+              {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 768px) 33vw, 100vw', alt: block.settings.image.alt | default: block.settings.title }}
+            </div>
+          {%- endif -%}
+          {%- if s.numbered -%}
+            <span class="feature__step" aria-hidden="true">{{ forloop.index | prepend: '0' }}</span>
+          {%- elsif block.settings.image == blank -%}
+            <span class="feature__icon">{% render 'icon', name: block.settings.icon %}</span>
+          {%- endif -%}
+          <h3>{{ block.settings.title | escape }}</h3>
+          <p class="text-muted">{{ block.settings.text | escape }}</p>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "How it works",
+  "class": "section-features",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it works" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Three passes to <em>new again.</em>" },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "checkbox", "id": "numbered", "label": "Show step numbers", "default": true },
+    { "type": "select", "id": "style", "label": "Background", "options": [{ "value": "none", "label": "None" }, { "value": "raised", "label": "Linen" }, { "value": "tint", "label": "Fir tint" }], "default": "raised" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step / benefit",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (optional)" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon (if no image)",
+          "options": [
+            { "value": "sweater", "label": "Sweater" }, { "value": "shield", "label": "Shield" }, { "value": "blade", "label": "Blade" },
+            { "value": "battery", "label": "Battery" }, { "value": "usb-c", "label": "USB-C" }, { "value": "sparkle", "label": "Sparkle" },
+            { "value": "couch", "label": "Couch" }, { "value": "clock", "label": "Clock" }, { "value": "leaf", "label": "Leaf" }
+          ],
+          "default": "sparkle"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Lay it flat" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Smooth the garment on a flat surface." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "How it works",
+      "blocks": [
+        { "type": "step", "settings": { "icon": "sweater", "title": "Lay it flat", "text": "Smooth the sweater on a table or bed. No need to stretch it." } },
+        { "type": "step", "settings": { "icon": "blade", "title": "Glide, don't press", "text": "Move in small circles. The guard does the work and keeps the blades off the knit." } },
+        { "type": "step", "settings": { "icon": "sparkle", "title": "Empty and done", "text": "Twist off the lint chamber, empty it, and wear the sweater again tonight." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

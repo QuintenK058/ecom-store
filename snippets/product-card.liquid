@@ -1,0 +1,80 @@
+{%- comment -%}
+  Product card. Consistent 4:5 ratio, hover image (desktop), rating, price, real badges,
+  color swatches, quick add (1-click if single variant, otherwise links to PDP options).
+  Params: product (required), loading: 'eager'|'lazy', sizes, show_quick_add (default true),
+          ratio: 'portrait'|'square', track (data-track prefix)
+{%- endcomment -%}
+{%- liquid
+  assign ratio = ratio | default: 'portrait'
+  assign loading = loading | default: 'lazy'
+  assign sizes = sizes | default: '(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw'
+  assign v = product.selected_or_first_available_variant
+  assign second = product.media[1]
+  assign color_option = nil
+  for option in product.options_with_values
+    assign name_down = option.name | downcase
+    if name_down == 'color' or name_down == 'colour'
+      assign color_option = option
+    endif
+  endfor
+-%}
+<div class="card">
+  <div class="card__media">
+    <div class="card__badges">{% render 'badge', product: product %}</div>
+    <div class="media media--{{ ratio }}">
+      {%- if product.featured_media -%}
+        {{
+          product.featured_media
+          | image_url: width: 1200
+          | image_tag: loading: loading, sizes: sizes, widths: '300, 450, 600, 800, 1000, 1200', alt: product.featured_media.alt | default: product.title
+        }}
+        {%- if second and second.media_type == 'image' -%}
+          {{
+            second
+            | image_url: width: 1200
+            | image_tag: loading: 'lazy', sizes: sizes, widths: '300, 450, 600, 800, 1000, 1200', alt: '', class: 'card__img--hover'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="card__body">
+    {% render 'rating', product: product %}
+    <h3 class="card__title">
+      <a href="{{ product.url }}" {% if track %}data-track="{{ track }}-card"{% endif %}>{{ product.title | escape }}</a>
+    </h3>
+    {%- if product.metafields.custom.subtitle != blank -%}
+      <p class="card__subtitle">{{ product.metafields.custom.subtitle.value | escape }}</p>
+    {%- endif -%}
+    {%- if color_option and color_option.values.size > 1 -%}
+      <div class="card__swatches" aria-label="{{ color_option.values.size }} {{ 'products.color' | t | downcase }}s">
+        {%- for value in color_option.values limit: 5 -%}
+          <span class="card__swatch" {% if value.swatch.color %}style="--swatch: {{ value.swatch.color }};"{% endif %} title="{{ value | escape }}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    {% render 'price', product: product %}
+  </div>
+
+  {%- unless show_quick_add == false -%}
+    <div class="card__footer">
+      {%- if product.available and product.has_only_default_variant -%}
+        <button
+          type="button"
+          class="button button--secondary"
+          data-quick-add="{{ v.id }}"
+          data-track="{{ track | default: 'card' }}-quick-add"
+        >
+          {{ 'products.quick_add' | t }}
+        </button>
+      {%- elsif product.available -%}
+        <a class="button button--secondary" href="{{ product.url }}" data-track="{{ track | default: 'card' }}-choose">
+          {{- 'products.choose_options' | t -}}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endunless -%}
+</div>

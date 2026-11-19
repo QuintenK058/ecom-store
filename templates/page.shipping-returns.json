@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": { "type": "main-page", "settings": { "eyebrow": "Help", "legal_notice": false } },
+    "guarantee": {
+      "type": "guarantee",
+      "blocks": { "p1": { "type": "point", "settings": { "text": "Free 30-day returns" } } },
+      "block_order": ["p1"],
+      "settings": { "seal_number": "30", "seal_label": "Day trial", "heading": "Use it first. <em>Decide later.</em>", "text": "<p>Questions about a return? <a href=\"/pages/contact\">Email us</a>.</p>", "cta_label": "" }
+    }
+  },
+  "order": ["main", "guarantee"]
+}

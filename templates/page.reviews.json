@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "reviews": { "type": "reviews", "settings": { "eyebrow": "Reviews", "heading": "Sweaters, <em>saved.</em>", "product": "lastly-shaver", "raised": false } },
+    "final": { "type": "final-cta", "settings": { "heading": "Your turn.", "cta_label": "Get my Lastly", "cta_link": "shopify://products/lastly-shaver", "show_email": false } }
+  },
+  "order": ["reviews", "final"]
+}

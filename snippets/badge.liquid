@@ -1,0 +1,28 @@
+{%- comment -%}
+  Product badges — real data only:
+  - Sold out: from inventory
+  - Save $X: from compare-at price
+  - custom.badge metafield (e.g. "Bestseller", "New") set by the merchant
+  - "Bestseller" from the product tag `bestseller` (only tag it if it's true)
+  Params: product (required), limit (default 2)
+{%- endcomment -%}
+{%- liquid
+  assign limit = limit | default: 2
+  assign shown = 0
+  assign v = product.selected_or_first_available_variant
+-%}
+{%- if product.available == false -%}
+  <span class="badge badge--muted">{{ 'products.sold_out' | t }}</span>
+  {%- assign shown = shown | plus: 1 -%}
+{%- endif -%}
+{%- if shown < limit and product.metafields.custom.badge != blank -%}
+  <span class="badge badge--primary">{{ product.metafields.custom.badge.value | escape }}</span>
+  {%- assign shown = shown | plus: 1 -%}
+{%- elsif shown < limit and product.tags contains 'bestseller' -%}
+  <span class="badge badge--primary">{{ 'products.bestseller' | t }}</span>
+  {%- assign shown = shown | plus: 1 -%}
+{%- endif -%}
+{%- if shown < limit and product.available and v.compare_at_price > v.price -%}
+  {%- assign saved = v.compare_at_price | minus: v.price | money_without_trailing_zeros -%}
+  <span class="badge badge--accent">{{ 'products.save_amount' | t: amount: saved }}</span>
+{%- endif -%}

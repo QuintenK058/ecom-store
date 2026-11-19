@@ -1,0 +1,39 @@
+<div class="container section" {{ section.shopify_attributes }}>
+  <div class="auth-card">
+    <h1 class="h1">{{ 'customer.login' | t }}</h1>
+    <div id="RecoverPassword" hidden>
+      <p class="text-muted">{{ 'customer.reset_info' | t }}</p>
+      {%- form 'recover_customer_password', class: 'stack' -%}
+        {%- if form.posted_successfully? -%}<p class="form-message form-message--success" role="status">Check your email for a reset link.</p>{%- endif -%}
+        <div class="field">
+          <label for="RecoverEmail">{{ 'customer.email' | t }}</label>
+          <input id="RecoverEmail" class="input" type="email" name="email" autocomplete="email" required>
+        </div>
+        <button type="submit" class="button button--full">{{ 'customer.submit' | t }}</button>
+        <a class="link text-sm" href="#login" onclick="document.getElementById('RecoverPassword').hidden=true;document.getElementById('CustomerLogin').hidden=false;">{{ 'customer.cancel' | t }}</a>
+      {%- endform -%}
+    </div>
+    <div id="CustomerLogin">
+      {%- form 'customer_login', class: 'stack', novalidate: 'novalidate' -%}
+        {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        <div class="field">
+          <label for="LoginEmail">{{ 'customer.email' | t }}</label>
+          <input id="LoginEmail" class="input" type="email" name="customer[email]" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="LoginPassword">{{ 'customer.password' | t }}</label>
+          <input id="LoginPassword" class="input" type="password" name="customer[password]" autocomplete="current-password" required>
+        </div>
+        <a class="link text-sm" href="#recover" onclick="document.getElementById('RecoverPassword').hidden=false;document.getElementById('CustomerLogin').hidden=true;">{{ 'customer.forgot_password' | t }}</a>
+        <button type="submit" class="button button--full">{{ 'customer.login' | t }}</button>
+        <a class="button button--secondary button--full" href="{{ routes.account_register_url }}">{{ 'customer.register' | t }}</a>
+      {%- endform -%}
+    </div>
+    {%- if shop.checkout.guest_login -%}
+      {%- form 'guest_login' -%}<button type="submit" class="button button--secondary button--full">Continue as guest</button>{%- endform -%}
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Login", "settings": [] }
+{% endschema %}

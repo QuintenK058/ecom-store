@@ -1,0 +1,28 @@
+{%- paginate blog.articles by 9 -%}
+  <div class="container section" {{ section.shopify_attributes }}>
+    <header class="page-header"><p class="eyebrow">Journal</p><h1 class="h1">{{ blog.title | escape }}</h1></header>
+    <ul class="blog-grid" role="list">
+      {%- for article in blog.articles -%}
+        <li>
+          <a class="article-card" href="{{ article.url }}">
+            <div class="media media--landscape">
+              {%- if article.image -%}
+                {{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 600, 900', sizes: '(min-width: 768px) 33vw, 100vw', alt: article.image.alt | default: '' }}
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <p class="text-sm text-muted">{{ article.published_at | date: '%a, %b %-d, %Y' }}</p>
+            <h2 class="h3">{{ article.title | escape }}</h2>
+            <p class="text-muted">{{ article.excerpt_or_content | strip_html | truncate: 140 }}</p>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {% render 'pagination', paginate: paginate %}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{ "name": "Blog", "settings": [] }
+{% endschema %}

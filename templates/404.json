@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "main": { "type": "main-404", "settings": {} },
+    "best": { "type": "featured-products", "settings": { "eyebrow": "Most people start here", "heading": "Our <em>bestseller</em>", "collection": "shop", "limit": 2, "columns": "2", "center": true } }
+  },
+  "order": ["main", "best"]
+}

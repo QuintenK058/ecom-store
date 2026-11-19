@@ -1,0 +1,95 @@
+{%- comment -%}
+  FAQ accordion. Source: blocks, or (PDP) the product's custom.faq metafield (list of FAQ metaobjects
+  with fields `question` + `answer`) when "Use product metafield" is on. Outputs FAQPage JSON-LD.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign mf_items = nil
+  if s.use_metafield and product and product.metafields.custom.faq != blank
+    assign mf_items = product.metafields.custom.faq.value
+  endif
+-%}
+<section class="section{% if s.raised %} section--raised{% endif %}" id="faq" {{ section.shopify_attributes }}>
+  <div class="container faq-layout">
+    <div class="section-header">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h1">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<div class="text-muted rte">{{ s.text }}</div>{%- endif -%}
+    </div>
+    <div>
+      {%- if mf_items -%}
+        {%- for item in mf_items -%}
+          <details class="accordion">
+            <summary>{{ item.question | escape }} {% render 'icon', name: 'plus', class: 'icon--plus' %}</summary>
+            <div class="accordion__content rte">{{ item.answer | metafield_tag }}</div>
+          </details>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <details class="accordion" {{ block.shopify_attributes }} {% if forloop.first and s.open_first %}open{% endif %}>
+            <summary>{{ block.settings.question | escape }} {% render 'icon', name: 'plus', class: 'icon--plus' %}</summary>
+            <div class="accordion__content rte">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- if s.schema -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- if mf_items -%}
+          {%- for item in mf_items -%}
+            { "@type": "Question", "name": {{ item.question.value | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ item.answer | metafield_text | json }} } }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for block in section.blocks -%}
+            { "@type": "Question", "name": {{ block.settings.question | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} } }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        {%- endif -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "class": "section-faq",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Questions" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Good questions." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Still wondering? <a href=\"/pages/contact\">Email a human</a>.</p>" },
+    { "type": "checkbox", "id": "use_metafield", "label": "Use product metafield (PDP)", "default": false },
+    { "type": "checkbox", "id": "open_first", "label": "Open first item", "default": false },
+    { "type": "checkbox", "id": "schema", "label": "Output FAQ structured data", "default": true },
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Will it put a hole in my sweater?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Answer.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "Will it put a hole in my sweater?", "answer": "<p>Not when used as directed. The stainless guard is rigid, so it doesn't flex into the fabric, and the blades sit behind it. Start on the higher setting for fine knits like cashmere, glide without pressing, and keep the fabric flat. If anything goes wrong, our 30-day return covers you.</p>" } },
+        { "type": "question", "settings": { "question": "Does it work on cashmere and merino?", "answer": "<p>Yes. Use the [higher] height setting and light, small circles. Always test on an inside seam first.</p>" } },
+        { "type": "question", "settings": { "question": "How long does the battery last?", "answer": "<p>About [90 minutes] per charge, enough for [15+] sweaters. It charges with any USB-C cable in about [2 hours].</p>" } },
+        { "type": "question", "settings": { "question": "Isn't a $15 shaver the same thing?", "answer": "<p>Cheap shavers usually run on AA batteries, have a flexible guard, and small lint bins. That's where holes, dead batteries and constant emptying come from. Lastly is built to fix exactly those three things.</p>" } },
+        { "type": "question", "settings": { "question": "When will my order arrive?", "answer": "<p>Orders placed before 2pm ET on business days ship the same day. Delivery takes 3–5 business days in the US. You'll see an exact estimate on the product page and in your cart.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

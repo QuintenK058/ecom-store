@@ -1,0 +1,44 @@
+{%- assign s = section.settings -%}
+<section class="section section--inverse" id="final-cta" {{ section.shopify_attributes }}>
+  <div class="container final-cta">
+    {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="h0">{{ s.heading }}</h2>
+    {%- if s.text != blank -%}<p class="lead">{{ s.text | escape }}</p>{%- endif -%}
+    {%- if s.cta_label != blank -%}
+      <a class="button button--light button--large" href="{{ s.cta_link | default: routes.all_products_collection_url }}" data-track="final-cta">{{ s.cta_label | escape }}</a>
+    {%- endif -%}
+    {%- if s.show_email -%}
+      <div class="final-cta__form">
+        <p class="text-sm">{{ s.email_text | escape }}</p>
+        {%- form 'customer', id: 'FinalCtaNewsletter' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,final-cta">
+          <div class="inline-form">
+            <label class="visually-hidden" for="FinalCtaEmail">{{ 'newsletter.label' | t }}</label>
+            <input id="FinalCtaEmail" class="input" type="email" name="contact[email]" autocomplete="email" placeholder="{{ 'newsletter.placeholder' | t }}" required>
+            <button type="submit" class="button button--ghost-light" data-track="final-cta-newsletter">{{ 'newsletter.submit' | t }}</button>
+          </div>
+          {%- if form.posted_successfully? -%}
+            <p class="form-message form-message--success mt-2" role="status">{{ 'newsletter.success' | t }}</p>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Final CTA",
+  "class": "section-final-cta",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Keep the sweater. <em>Lose the pills.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping over $60. Free 30-day returns." },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Get my Lastly" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "checkbox", "id": "show_email", "label": "Show email capture", "default": true },
+    { "type": "text", "id": "email_text", "label": "Email text", "default": "Not today? Get 10% off when you're ready." }
+  ],
+  "presets": [{ "name": "Final CTA" }]
+}
+{% endschema %}

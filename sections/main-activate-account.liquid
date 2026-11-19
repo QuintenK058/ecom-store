@@ -1,0 +1,15 @@
+<div class="container section" {{ section.shopify_attributes }}>
+  <div class="auth-card">
+    <h1 class="h1">{{ 'customer.activate' | t }}</h1>
+    {%- form 'activate_customer_password', class: 'stack' -%}
+      {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="field"><label for="ActPassword">{{ 'customer.password' | t }}</label><input id="ActPassword" class="input" type="password" name="customer[password]" autocomplete="new-password" required></div>
+      <div class="field"><label for="ActConfirm">{{ 'customer.confirm_password' | t }}</label><input id="ActConfirm" class="input" type="password" name="customer[password_confirmation]" autocomplete="new-password" required></div>
+      <button type="submit" class="button button--full">{{ 'customer.activate' | t }}</button>
+      <button type="submit" name="decline" class="button button--secondary button--full">{{ 'customer.decline' | t }}</button>
+    {%- endform -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Activate account", "settings": [] }
+{% endschema %}

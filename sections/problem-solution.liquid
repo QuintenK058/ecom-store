@@ -1,0 +1,96 @@
+{%- liquid
+  assign s = section.settings
+  assign old_points = section.blocks | where: 'type', 'old'
+  assign new_points = section.blocks | where: 'type', 'new'
+-%}
+<section class="section" id="why" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="section-header section-header--center">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h1">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="lead">{{ s.text | escape }}</p>{%- endif -%}
+    </div>
+
+    {%- if s.before_image or s.after_image -%}
+      <before-after class="before-after before-after--centered mb-4">
+        {%- if s.before_image -%}
+          {{ s.before_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '400, 600, 800, 1200', sizes: '(min-width: 768px) 640px, 100vw', alt: s.before_alt, class: 'before-after__before' }}
+        {%- endif -%}
+        {%- if s.after_image -%}
+          {{ s.after_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '400, 600, 800, 1200', sizes: '(min-width: 768px) 640px, 100vw', alt: s.after_alt, class: 'before-after__after' }}
+        {%- endif -%}
+        <span class="badge before-after__label before-after__label--before">Before</span>
+        <span class="badge badge--primary before-after__label before-after__label--after">After</span>
+        <input class="before-after__range" type="range" min="0" max="100" value="50" aria-label="Drag to compare before and after">
+        <span class="before-after__handle" aria-hidden="true"></span>
+      </before-after>
+      {%- if s.disclaimer != blank -%}<p class="text-xs text-muted center mb-4">{{ s.disclaimer | escape }}</p>{%- endif -%}
+    {%- endif -%}
+
+    <div class="versus mt-6">
+      <div class="versus__col versus__col--old">
+        <p class="eyebrow">{{ s.old_label | escape }}</p>
+        <h3 class="h2">{{ s.old_heading | escape }}</h3>
+        <ul class="versus__list" role="list">
+          {%- for block in old_points -%}
+            <li {{ block.shopify_attributes }}>{% render 'icon', name: 'x' %}<span>{{ block.settings.text | escape }}</span></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="versus__col versus__col--new">
+        <p class="eyebrow">{{ s.new_label | escape }}</p>
+        <h3 class="h2">{{ s.new_heading | escape }}</h3>
+        <ul class="versus__list" role="list">
+          {%- for block in new_points -%}
+            <li {{ block.shopify_attributes }}>{% render 'icon', name: 'check' %}<span>{{ block.settings.text | escape }}</span></li>
+          {%- endfor -%}
+        </ul>
+        {%- if s.cta_label != blank -%}
+          <a class="button button--light" href="{{ s.cta_link | default: routes.all_products_collection_url }}" data-track="versus-cta">{{ s.cta_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Problem → solution",
+  "class": "section-versus",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The problem" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Pills don't mean <em>replace it.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Friction tangles loose fibers into tiny balls. The sweater underneath is fine. You just can't see it." },
+    { "type": "header", "content": "Before / after slider" },
+    { "type": "image_picker", "id": "before_image", "label": "Before image" },
+    { "type": "image_picker", "id": "after_image", "label": "After image", "info": "Same crop as before. Real, unretouched photos only (FTC)." },
+    { "type": "text", "id": "before_alt", "label": "Before alt text", "default": "Pilled wool sweater sleeve before shaving" },
+    { "type": "text", "id": "after_alt", "label": "After alt text", "default": "The same sleeve after one pass with Lastly" },
+    { "type": "text", "id": "disclaimer", "label": "Photo note", "default": "Real photos, same sweater, one pass. No retouching." },
+    { "type": "header", "content": "Columns" },
+    { "type": "text", "id": "old_label", "label": "Old way label", "default": "The old way" },
+    { "type": "text", "id": "old_heading", "label": "Old way heading", "default": "Toss it, or risk it" },
+    { "type": "text", "id": "new_label", "label": "Our way label", "default": "The Lastly way" },
+    { "type": "text", "id": "new_heading", "label": "Our way heading", "default": "Keep it, safely" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Save my sweaters" },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
+  ],
+  "blocks": [
+    { "type": "old", "name": "Old way point", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Good sweaters go to the donation bag" }] },
+    { "type": "new", "name": "Our way point", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Looks new again in minutes" }] }
+  ],
+  "presets": [
+    {
+      "name": "Problem → solution",
+      "blocks": [
+        { "type": "old", "settings": { "text": "A pilled sweater goes to the donation bag" } },
+        { "type": "old", "settings": { "text": "A $12 shaver eats batteries and chews a hole in the elbow" } },
+        { "type": "old", "settings": { "text": "Tape rollers grab lint, not pills" } },
+        { "type": "new", "settings": { "text": "Lifts pills in one pass, about [5] minutes per sweater" } },
+        { "type": "new", "settings": { "text": "Rigid guard keeps the blades off the knit" } },
+        { "type": "new", "settings": { "text": "Rechargeable with any USB-C cable" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

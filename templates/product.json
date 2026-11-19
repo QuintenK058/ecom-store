@@ -1,0 +1,113 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "rating": { "type": "rating", "settings": {} },
+        "title": { "type": "title", "settings": {} },
+        "price": { "type": "price", "settings": { "show_bnpl": true, "bnpl_suffix": " with Shop Pay" } },
+        "benefits": { "type": "benefits", "settings": { "fallback": "Lifts pills in one pass\nRigid guard keeps blades off the knit\nCharges with any USB-C cable\nSafe on cashmere, wool and fleece" } },
+        "variants": { "type": "variant_picker", "settings": { "swatches": false } },
+        "offer": {
+          "type": "offer",
+          "settings": {
+            "heading": "Choose your bundle",
+            "default_tier": "2",
+            "tier1_qty": 1, "tier1_label": "1 Shaver", "tier1_sub": "For your closet", "tier1_amount_off": 0, "tier1_badge": "",
+            "tier2_qty": 2, "tier2_label": "The Pair", "tier2_sub": "One for you, one to give", "tier2_amount_off": 9, "tier2_badge": "Most popular",
+            "tier3_qty": 3, "tier3_label": "Family pack", "tier3_sub": "", "tier3_amount_off": 28, "tier3_badge": "Best value",
+            "note": "Bundle savings apply automatically at checkout."
+          }
+        },
+        "buy": { "type": "buy_buttons", "settings": { "label": "Add to cart", "show_dynamic_checkout": true, "show_stock": true } },
+        "delivery": { "type": "delivery", "settings": {} },
+        "trust": { "type": "trust", "settings": { "text_1": "Free shipping over $60", "text_2": "Free 30-day returns", "text_3": "Secure checkout" } },
+        "acc-details": { "type": "accordion", "settings": { "title": "Details & specs", "icon": "sparkle", "source": "details", "content": "<ul><li>[6] stainless blades, [2.4\"] head</li><li>Rigid stainless guard with [2] height settings</li><li>USB-C fast charge, works with any USB-C cable</li><li>[90 min] runtime per charge, [2 hr] full charge</li><li>Oversized twist-off lint chamber</li><li>Weight: [5.3 oz]</li></ul>" } },
+        "acc-how": { "type": "accordion", "settings": { "title": "How to use", "icon": "blade", "source": "how_to_use", "content": "<ol><li>Lay the garment flat on a firm surface.</li><li>Choose the higher setting for fine knits like cashmere, the lower one for coats and fleece.</li><li>Glide in small circles without pressing. Let the guard do the work.</li><li>Empty the lint chamber when it's about half full.</li></ol><p>Test on an inside seam first.</p>" } },
+        "acc-included": { "type": "accordion", "settings": { "title": "What's included", "icon": "gift", "source": "whats_included", "content": "<ul><li>Lastly Shaver</li><li>USB-C cable</li><li>Cleaning brush</li><li>[Spare blade head]</li></ul>" } },
+        "acc-shipping": { "type": "accordion", "settings": { "title": "Shipping & returns", "icon": "truck", "source": "content", "content": "<p>Free US shipping on orders over $60. Orders placed before [2pm ET] on business days ship [the same day]; delivery takes [3–5] business days.</p><p>Free 30-day returns. Use it on your favorite sweater first. <a href=\"/pages/shipping-returns\">Full policy</a>.</p>" } }
+      },
+      "block_order": ["rating", "title", "price", "benefits", "variants", "offer", "buy", "delivery", "trust", "acc-details", "acc-how", "acc-included", "acc-shipping"],
+      "settings": { "low_stock_threshold": 5 }
+    },
+    "benefit-1": {
+      "type": "image-with-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "Safe on good fabric" } },
+        "h": { "type": "heading", "settings": { "text": "A guard that <em>doesn't flex.</em>" } },
+        "t": { "type": "text", "settings": { "text": "<p>Cheap shavers use thin mesh that bends under your fingers and lets the blades touch the knit. That's where holes come from. Lastly's guard is [rigid stainless steel], so the blades stay where they belong.</p>" } },
+        "b1": { "type": "bullet", "settings": { "icon": "shield", "text": "[2] heights, including one for cashmere" } },
+        "b2": { "type": "bullet", "settings": { "icon": "check", "text": "Covered by our 30-day return" } }
+      },
+      "block_order": ["e", "h", "t", "b1", "b2"],
+      "settings": { "ratio": "square", "reverse": false, "style": "raised" }
+    },
+    "benefit-2": {
+      "type": "image-with-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "Built to last" } },
+        "h": { "type": "heading", "settings": { "text": "No batteries. <em>No babysitting.</em>" } },
+        "t": { "type": "text", "settings": { "text": "<p>Charge it with the same USB-C cable as your phone. [90 minutes] of runtime covers a whole closet, and the oversized lint chamber means fewer stops to empty it.</p>" } },
+        "b1": { "type": "bullet", "settings": { "icon": "usb-c", "text": "Any USB-C cable, C-to-C or C-to-A" } },
+        "b2": { "type": "bullet", "settings": { "icon": "blade", "text": "Replaceable blade heads" } }
+      },
+      "block_order": ["e", "h", "t", "b1", "b2"],
+      "settings": { "ratio": "square", "reverse": true, "style": "none" }
+    },
+    "how": {
+      "type": "how-it-works",
+      "blocks": {
+        "s1": { "type": "step", "settings": { "icon": "sweater", "title": "Lay it flat", "text": "Smooth the sweater on a table or bed." } },
+        "s2": { "type": "step", "settings": { "icon": "blade", "title": "Glide, don't press", "text": "Small circles. The guard does the work." } },
+        "s3": { "type": "step", "settings": { "icon": "sparkle", "title": "Empty and done", "text": "Twist off the chamber, empty it, wear it tonight." } }
+      },
+      "block_order": ["s1", "s2", "s3"],
+      "settings": { "eyebrow": "How it works", "heading": "Three steps to <em>new again.</em>", "numbered": true, "style": "tint" }
+    },
+    "compare": {
+      "type": "comparison",
+      "blocks": {
+        "r1": { "type": "row", "settings": { "label": "Removes pills (not just lint)", "us": "yes", "them": "yes", "them2": "no" } },
+        "r2": { "type": "row", "settings": { "label": "Rigid guard, safe on cashmere", "us": "yes", "them": "no", "them2": "yes" } },
+        "r3": { "type": "row", "settings": { "label": "Rechargeable, any USB-C cable", "us": "yes", "them": "no", "them2": "no" } },
+        "r4": { "type": "row", "settings": { "label": "Replaceable blades", "us": "yes", "them": "no", "them2": "no" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4"],
+      "settings": { "eyebrow": "Compare", "heading": "Not all shavers are <em>safe</em> shavers.", "us_label": "Lastly", "them_label": "Drugstore shaver", "them2_label": "Lint roller", "use_metafield": true, "raised": false }
+    },
+    "reviews": {
+      "type": "reviews",
+      "settings": { "eyebrow": "Reviews", "heading": "Sweaters, <em>saved.</em>", "raised": true }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "Will it put a hole in my sweater?", "answer": "<p>Not when used as directed. The guard is rigid, so it doesn't flex into the fabric. Use the higher setting on fine knits and glide without pressing.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "Does it work on cashmere and merino?", "answer": "<p>Yes. Use the [higher] setting and light, small circles. Test on an inside seam first.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "How often do I replace the blades?", "answer": "<p>About every [6 months] with regular use, or when passes start taking longer. Refills are $19 for two.</p>" } },
+        "q4": { "type": "question", "settings": { "question": "Does the Pair discount apply automatically?", "answer": "<p>Yes. Pick 2 or 3 above and the savings show up at checkout. No code needed.</p>" } },
+        "q5": { "type": "question", "settings": { "question": "What if it doesn't work for me?", "answer": "<p>Send it back within 30 days for a full refund. [Return shipping is on us.]</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "settings": { "eyebrow": "Questions", "heading": "Before you buy.", "use_metafield": true, "schema": true }
+    },
+    "guarantee": {
+      "type": "guarantee",
+      "blocks": {
+        "p1": { "type": "point", "settings": { "text": "Free 30-day returns" } },
+        "p2": { "type": "point", "settings": { "text": "[1-year warranty]" } }
+      },
+      "block_order": ["p1", "p2"],
+      "settings": { "seal_number": "30", "seal_label": "Day trial", "heading": "Try it on your <em>favorite</em> sweater.", "text": "<p>If your knits don't look better in 30 days, send it back for a full refund.</p>", "cta_label": "", "raised": true }
+    },
+    "fbt": {
+      "type": "frequently-bought-together",
+      "settings": { "heading": "Keep it cutting clean", "products": ["blade-refill"] }
+    },
+    "recent": {
+      "type": "recently-viewed",
+      "settings": { "heading": "Recently viewed" }
+    }
+  },
+  "order": ["main", "benefit-1", "benefit-2", "how", "compare", "reviews", "faq", "guarantee", "fbt", "recent"]
+}

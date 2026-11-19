@@ -1,0 +1,161 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "layout": "split",
+        "eyebrow": "The fabric shaver for clothes you love",
+        "heading": "It's not worn out. It's <em>just pilled.</em>",
+        "subheading": "Lastly lifts pills and fuzz from sweaters, coats and couches in one pass, with a guard that keeps the blades off the knit.",
+        "cta_label": "Get my Lastly",
+        "cta_link": "shopify://products/lastly-shaver",
+        "cta2_label": "See how it works",
+        "cta2_link": "#how-it-works",
+        "proof_product": "lastly-shaver",
+        "proof_text": "Free 30-day returns",
+        "proof_text_2": "Free US shipping over $60"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "u1": { "type": "usp", "settings": { "icon": "shield", "text": "Guard keeps blades off the knit" } },
+        "u2": { "type": "usp", "settings": { "icon": "usb-c", "text": "Charges with any USB-C cable" } },
+        "u3": { "type": "usp", "settings": { "icon": "return", "text": "Free 30-day returns" } },
+        "u4": { "type": "usp", "settings": { "icon": "truck", "text": "Free US shipping over $60" } }
+      },
+      "block_order": ["u1", "u2", "u3", "u4"],
+      "settings": { "raised": false }
+    },
+    "spotlight": {
+      "type": "product-spotlight",
+      "settings": {
+        "product": "lastly-shaver",
+        "eyebrow": "Meet the shaver",
+        "heading": "One pass. <em>New again.</em>",
+        "text": "<p>Wide head, [6] blades and a rigid guard that doesn't flex, so a whole sweater takes about [5] minutes and never a hole.</p>",
+        "button_label": "Add to cart",
+        "raised": true
+      }
+    },
+    "problem": {
+      "type": "problem-solution",
+      "blocks": {
+        "o1": { "type": "old", "settings": { "text": "A pilled sweater goes to the donation bag" } },
+        "o2": { "type": "old", "settings": { "text": "A $12 shaver eats batteries and chews a hole in the elbow" } },
+        "o3": { "type": "old", "settings": { "text": "Tape rollers grab lint, not pills" } },
+        "n1": { "type": "new", "settings": { "text": "Lifts pills in one pass, about [5] minutes per sweater" } },
+        "n2": { "type": "new", "settings": { "text": "Rigid guard keeps the blades off the knit" } },
+        "n3": { "type": "new", "settings": { "text": "Rechargeable with any USB-C cable" } }
+      },
+      "block_order": ["o1", "o2", "o3", "n1", "n2", "n3"],
+      "settings": {
+        "eyebrow": "The problem",
+        "heading": "Pills don't mean <em>replace it.</em>",
+        "text": "Friction tangles loose fibers into tiny balls. The sweater underneath is fine. You just can't see it.",
+        "cta_label": "Save my sweaters",
+        "cta_link": "shopify://products/lastly-shaver"
+      }
+    },
+    "how": {
+      "type": "how-it-works",
+      "blocks": {
+        "s1": { "type": "step", "settings": { "icon": "sweater", "title": "Lay it flat", "text": "Smooth the sweater on a table or bed. No need to stretch it." } },
+        "s2": { "type": "step", "settings": { "icon": "blade", "title": "Glide, don't press", "text": "Move in small circles. The guard does the work and keeps the blades off the knit." } },
+        "s3": { "type": "step", "settings": { "icon": "sparkle", "title": "Empty and done", "text": "Twist off the lint chamber, empty it, and wear the sweater again tonight." } }
+      },
+      "block_order": ["s1", "s2", "s3"],
+      "settings": { "eyebrow": "How it works", "heading": "Three steps to <em>new again.</em>", "numbered": true, "style": "none" }
+    },
+    "compare": {
+      "type": "comparison",
+      "blocks": {
+        "r1": { "type": "row", "settings": { "label": "Removes pills (not just lint)", "us": "yes", "them": "yes", "them2": "no" } },
+        "r2": { "type": "row", "settings": { "label": "Rigid guard, safe on cashmere", "us": "yes", "them": "no", "them2": "yes" } },
+        "r3": { "type": "row", "settings": { "label": "Rechargeable, any USB-C cable", "us": "yes", "them": "no", "them2": "no" } },
+        "r4": { "type": "row", "settings": { "label": "Runtime per charge", "us": "[90 min]", "them": "AA batteries", "them2": "—" } },
+        "r5": { "type": "row", "settings": { "label": "Replaceable blades", "us": "yes", "them": "no", "them2": "no" } },
+        "r6": { "type": "row", "settings": { "label": "Free 30-day returns", "us": "yes", "them": "no", "them2": "no" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6"],
+      "settings": {
+        "eyebrow": "Compare",
+        "heading": "Not all shavers are <em>safe</em> shavers.",
+        "us_label": "Lastly",
+        "them_label": "Drugstore shaver",
+        "them2_label": "Lint roller",
+        "note": "Compared with typical battery-operated shavers sold at US drugstores, [month year].",
+        "raised": true
+      }
+    },
+    "reviews": {
+      "type": "reviews",
+      "settings": { "eyebrow": "Reviews", "heading": "Sweaters, <em>saved.</em>", "product": "lastly-shaver", "raised": false }
+    },
+    "tiles": {
+      "type": "use-case-tiles",
+      "blocks": {
+        "t1": { "type": "tile", "settings": { "title": "Sweaters & cashmere", "link": "shopify://products/lastly-shaver" } },
+        "t2": { "type": "tile", "settings": { "title": "Coats & wool", "link": "shopify://products/lastly-shaver" } },
+        "t3": { "type": "tile", "settings": { "title": "Couches & throws", "link": "shopify://products/lastly-shaver" } },
+        "t4": { "type": "tile", "settings": { "title": "Leggings & fleece", "link": "shopify://products/lastly-shaver" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": { "eyebrow": "Works on", "heading": "More than <em>sweaters.</em>", "text": "Anything that pills: knits, coats, blankets, upholstery." }
+    },
+    "founder": {
+      "type": "image-with-text",
+      "blocks": {
+        "e": { "type": "eyebrow", "settings": { "text": "Why we started" } },
+        "h": { "type": "heading", "settings": { "text": "I almost threw out my <em>favorite</em> sweater." } },
+        "t": { "type": "text", "settings": { "text": "<p>[Founder story, 2–3 sentences, real and specific. Example structure: It was a grey merino I'd worn for six winters. It looked tired, so it went in the donation bag. Then I learned it wasn't worn out at all — just pilled.]</p><p>[Why the cheap shavers didn't work for you, and what you built instead.]</p>" } },
+        "sig": { "type": "signature", "settings": { "text": "— [Founder name], founder" } },
+        "b": { "type": "button", "settings": { "label": "Read our story", "link": "shopify://pages/about", "secondary": true } }
+      },
+      "block_order": ["e", "h", "t", "sig", "b"],
+      "settings": { "ratio": "portrait", "reverse": false, "style": "raised" }
+    },
+    "guarantee": {
+      "type": "guarantee",
+      "blocks": {
+        "p1": { "type": "point", "settings": { "text": "Free 30-day returns" } },
+        "p2": { "type": "point", "settings": { "text": "[1-year warranty]" } },
+        "p3": { "type": "point", "settings": { "text": "Real humans on email" } }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {
+        "seal_number": "30",
+        "seal_label": "Day trial",
+        "heading": "Try it on your <em>favorite</em> sweater.",
+        "text": "<p>Use it for 30 days. If your knits don't look better, send it back for a full refund. [Return shipping is on us.]</p>",
+        "cta_label": "Try it risk-free",
+        "cta_link": "shopify://products/lastly-shaver",
+        "policy_link": "shopify://pages/shipping-returns"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "Will it put a hole in my sweater?", "answer": "<p>Not when used as directed. The stainless guard is rigid, so it doesn't flex into the fabric, and the blades sit behind it. Use the higher setting on fine knits, glide without pressing, and keep the fabric flat. If anything goes wrong, our 30-day return covers you.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "Does it work on cashmere and merino?", "answer": "<p>Yes. Use the [higher] height setting and light, small circles. Test on an inside seam first.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "How long does the battery last?", "answer": "<p>About [90 minutes] per charge, enough for [15+] sweaters. It charges with any USB-C cable in about [2 hours].</p>" } },
+        "q4": { "type": "question", "settings": { "question": "Isn't a $15 shaver the same thing?", "answer": "<p>Cheap shavers usually run on AA batteries, have a flexible guard and a tiny lint bin. That's where holes, dead batteries and constant emptying come from. Lastly is built to fix those three things.</p>" } },
+        "q5": { "type": "question", "settings": { "question": "When will my order arrive?", "answer": "<p>Orders placed before [2pm ET] on business days ship the [same day]. US delivery takes [3–5] business days. You'll see an exact estimate on the product page and in your cart.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "settings": { "eyebrow": "Questions", "heading": "Good questions.", "text": "<p>Still wondering? <a href=\"/pages/contact\">Email a human</a>.</p>", "schema": true }
+    },
+    "final": {
+      "type": "final-cta",
+      "settings": {
+        "heading": "Keep the sweater. <em>Lose the pills.</em>",
+        "text": "Free US shipping over $60. Free 30-day returns.",
+        "cta_label": "Get my Lastly",
+        "cta_link": "shopify://products/lastly-shaver",
+        "show_email": true,
+        "email_text": "Not today? Get 10% off when you're ready."
+      }
+    }
+  },
+  "order": ["hero", "trust", "spotlight", "problem", "how", "compare", "reviews", "tiles", "founder", "guarantee", "faq", "final"]
+}

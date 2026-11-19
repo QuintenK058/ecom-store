@@ -1,0 +1,71 @@
+{{ 'collection.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'facets.js' | asset_url }}" defer></script>
+{%- paginate search.results by 12 -%}
+  <div class="container" {{ section.shopify_attributes }}>
+    <header class="collection-header">
+      <h1 class="h1">{% if search.performed %}{{ 'search.results_for' | t: terms: search.terms }}{% else %}{{ 'search.title' | t }}{% endif %}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form mt-4">
+        <label class="visually-hidden" for="SearchPageInput">{{ 'search.placeholder' | t }}</label>
+        <input id="SearchPageInput" class="input" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}">
+        <input type="hidden" name="type" value="product">
+        <button type="submit" class="button">{{ 'search.submit' | t }}</button>
+      </form>
+    </header>
+
+    {%- if search.performed -%}
+      <facet-filters-form data-section-id="{{ section.id }}">
+        <div class="facets-bar">
+          <p class="facets-bar__count" data-facet-count role="status">{{ 'collections.product_count' | t: count: search.results_count }}</p>
+        </div>
+        <div class="active-facets" data-facet-active>{% render 'active-facets', results: search %}</div>
+        <div class="collection-layout{% if search.filters.size > 0 %} collection-layout--sidebar{% endif %}">
+          {%- if search.filters.size > 0 -%}
+            <aside class="facets-sidebar" aria-label="{{ 'collections.filter' | t }}">
+              <form id="FacetFormSidebar" data-facet-sidebar>
+                <input type="hidden" name="q" value="{{ search.terms | escape }}">
+                <input type="hidden" name="type" value="product">
+                {% render 'facets', results: search, location: 'sidebar' %}
+              </form>
+            </aside>
+          {%- endif -%}
+          <div data-facet-results>
+            {%- if search.results_count == 0 -%}
+              <div class="empty-state">
+                <p class="h2">{{ 'search.no_results' | t: terms: search.terms }}</p>
+                {%- if section.settings.fallback_product != blank -%}
+                  <div class="w-full container--narrow">{% render 'product-card', product: section.settings.fallback_product, track: 'search-empty' %}</div>
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              <ul class="product-grid" role="list" data-product-grid>
+                {%- for item in search.results -%}
+                  <li>
+                    {%- if item.object_type == 'product' -%}
+                      {% render 'product-card', product: item, track: 'search' %}
+                    {%- else -%}
+                      <a class="article-card" href="{{ item.url }}">
+                        <p class="eyebrow">{{ item.object_type }}</p>
+                        <p class="card__title">{{ item.title | escape }}</p>
+                        <p class="text-sm text-muted">{{ item.content | strip_html | truncate: 120 }}</p>
+                      </a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+              {% render 'pagination', paginate: paginate %}
+            {%- endif -%}
+          </div>
+        </div>
+      </facet-filters-form>
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": [
+    { "type": "product", "id": "fallback_product", "label": "No results: suggest product" }
+  ]
+}
+{% endschema %}

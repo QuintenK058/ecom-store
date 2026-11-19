@@ -1,0 +1,67 @@
+{%- comment -%}
+  Filters from Shopify Search & Discovery (storefront filters).
+  Params: results (collection or search), location: 'sidebar' | 'drawer'
+{%- endcomment -%}
+{%- for filter in results.filters -%}
+  <details class="facet" {% if location == 'sidebar' and forloop.index <= 3 %}open{% endif %}{% if filter.active_values.size > 0 %} open{% endif %}>
+    <summary>
+      <span>{{ filter.label | escape }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</span>
+      {% render 'icon', name: 'chevron-down', class: 'icon--sm' %}
+    </summary>
+    {%- case filter.type -%}
+      {%- when 'price_range' -%}
+        <div class="facet__price">
+          <div class="field">
+            <label for="{{ location }}-{{ filter.min_value.param_name | handle }}">{{ 'collections.price_from' | t }} ({{ cart.currency.symbol }})</label>
+            <input
+              class="input"
+              id="{{ location }}-{{ filter.min_value.param_name | handle }}"
+              type="number"
+              inputmode="decimal"
+              name="{{ filter.min_value.param_name }}"
+              value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+              placeholder="0"
+              min="0"
+            >
+          </div>
+          <div class="field">
+            <label for="{{ location }}-{{ filter.max_value.param_name | handle }}">{{ 'collections.price_to' | t }} ({{ cart.currency.symbol }})</label>
+            <input
+              class="input"
+              id="{{ location }}-{{ filter.max_value.param_name | handle }}"
+              type="number"
+              inputmode="decimal"
+              name="{{ filter.max_value.param_name }}"
+              value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | replace: ',', '' }}{% endif %}"
+              placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+              min="0"
+            >
+          </div>
+        </div>
+      {%- when 'boolean' -%}
+        <ul class="facet__list" role="list">
+          {%- for value in filter.values -%}
+            <li>
+              <label class="checkbox{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                <span>{{ value.label | escape }}</span>
+                <span>{{ value.count }}</span>
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <ul class="facet__list" role="list">
+          {%- for value in filter.values -%}
+            <li>
+              <label class="checkbox{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                <span>{{ value.label | escape }}</span>
+                <span>{{ value.count }}</span>
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+    {%- endcase -%}
+  </details>
+{%- endfor -%}

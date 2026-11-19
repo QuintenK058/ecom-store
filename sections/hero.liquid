@@ -1,0 +1,119 @@
+{%- liquid
+  assign s = section.settings
+  assign proof_product = s.proof_product
+  assign is_first = false
+  if section.index == 1
+    assign is_first = true
+  endif
+  assign loading = 'lazy'
+  if is_first
+    assign loading = 'eager'
+  endif
+-%}
+{%- comment -%} Preload the LCP image only when the hero is the first section. {%- endcomment -%}
+<section class="hero hero--{{ s.layout }}{% if s.layout == 'split' %} section{% endif %}" {{ section.shopify_attributes }}>
+  {%- capture media -%}
+    <div class="hero__media">
+      {%- if s.image_mobile -%}
+        <div class="media media--mobile{% if s.image %} has-desktop{% endif %}">
+          {{
+            s.image_mobile
+            | image_url: width: 1200
+            | image_tag: loading: loading, fetchpriority: 'high', preload: is_first, widths: '375, 550, 750, 900, 1100', sizes: '100vw', alt: s.image_mobile.alt | default: s.heading | strip_html
+          }}
+        </div>
+      {%- endif -%}
+      {%- if s.image -%}
+        <div class="media {% if s.image_mobile %}media--desktop{% endif %}">
+          {%- liquid
+            if s.layout == 'overlay'
+              assign hero_sizes = '100vw'
+            else
+              assign hero_sizes = '(min-width: 1024px) 50vw, 100vw'
+            endif
+          -%}
+          {{
+            s.image
+            | image_url: width: 2400
+            | image_tag: loading: loading, fetchpriority: 'high', preload: is_first, widths: '600, 900, 1200, 1600, 2000, 2400', sizes: hero_sizes, alt: s.image.alt | default: s.heading | strip_html
+          }}
+        </div>
+      {%- endif -%}
+      {%- if s.image == blank and s.image_mobile == blank -%}
+        <div class="media">{{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+      {%- endif -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- if s.layout == 'overlay' -%}{{ media }}{%- endif -%}
+
+  <div class="container hero__grid">
+    <div class="hero__content">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="h0">{{ s.heading }}</h1>
+      {%- if s.subheading != blank -%}<p class="lead">{{ s.subheading | escape }}</p>{%- endif -%}
+
+      <div class="hero__ctas">
+        {%- if s.cta_label != blank -%}
+          <a href="{{ s.cta_link | default: routes.all_products_collection_url }}" class="button button--large{% if s.layout == 'overlay' %} button--light{% endif %}" data-track="hero-primary">
+            {{- s.cta_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if s.cta2_label != blank -%}
+          <a href="{{ s.cta2_link }}" class="button button--large {% if s.layout == 'overlay' %}button--ghost-light{% else %}button--secondary{% endif %}" data-track="hero-secondary">
+            {{- s.cta2_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Social proof directly under CTA — only real data. {%- endcomment -%}
+      <div class="hero__proof">
+        {%- if proof_product != blank -%}
+          {%- assign proof_link = proof_product.url | append: '#reviews' -%}
+          {% render 'rating', product: proof_product, link: proof_link %}
+        {%- endif -%}
+        {%- if s.proof_text != blank -%}
+          <span>{% render 'icon', name: 'shield', class: 'icon--sm' %} {{ s.proof_text | escape }}</span>
+        {%- endif -%}
+        {%- if s.proof_text_2 != blank -%}
+          <span>{% render 'icon', name: 'truck', class: 'icon--sm' %} {{ s.proof_text_2 | escape }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if s.layout == 'split' -%}{{ media }}{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "section-hero",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Text + image" },
+        { "value": "overlay", "label": "Full-bleed image" }
+      ],
+      "default": "split"
+    },
+    { "type": "image_picker", "id": "image", "label": "Image (desktop)", "info": "Square or 3:2. The before/after line on a knit works best." },
+    { "type": "image_picker", "id": "image_mobile", "label": "Image (mobile)", "info": "4:5, product in the lower two-thirds." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The fabric shaver for clothes you love" },
+    { "type": "inline_richtext", "id": "heading", "label": "Headline (≤ 8 words)", "default": "It's not worn out. It's <em>just pilled.</em>" },
+    { "type": "text", "id": "subheading", "label": "Supporting line", "default": "Lastly lifts pills and fuzz from sweaters, coats and couches in one pass — with a guard that keeps the blades off the knit." },
+    { "type": "text", "id": "cta_label", "label": "Primary button", "default": "Get my Lastly" },
+    { "type": "url", "id": "cta_link", "label": "Primary link" },
+    { "type": "text", "id": "cta2_label", "label": "Secondary button", "default": "See how it works" },
+    { "type": "url", "id": "cta2_link", "label": "Secondary link" },
+    { "type": "header", "content": "Proof (under CTA)" },
+    { "type": "product", "id": "proof_product", "label": "Show star rating of", "info": "Only appears once the product has real reviews." },
+    { "type": "text", "id": "proof_text", "label": "Proof line 1", "default": "Free 30-day returns" },
+    { "type": "text", "id": "proof_text_2", "label": "Proof line 2", "default": "Free US shipping over $60" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

@@ -1,0 +1,113 @@
+{%- comment -%}
+  Comparison table. Rows come from blocks, OR from the product metafield custom.comparison
+  (JSON: {"columns":["Lastly","Typical shaver"],"rows":[{"label":"...","values":["yes","no"]}]})
+  when "Use product metafield" is on (PDP).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign source = nil
+  if s.use_metafield and product and product.metafields.custom.comparison != blank
+    assign source = product.metafields.custom.comparison.value
+  endif
+-%}
+<section class="section{% if s.raised %} section--raised{% endif %}" id="compare" {{ section.shopify_attributes }}>
+  <div class="container container--narrow">
+    <div class="section-header section-header--center">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="h1">{{ s.heading }}</h2>
+    </div>
+    <div class="compare" role="region" aria-label="{{ s.heading | strip_html | escape }}" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"><span class="visually-hidden">Feature</span></th>
+            {%- if source -%}
+              {%- for col in source.columns -%}
+                <th scope="col" {% if forloop.first %}class="is-us"{% endif %}>{{ col | escape }}</th>
+              {%- endfor -%}
+            {%- else -%}
+              <th scope="col" class="is-us">{{ s.us_label | escape }}</th>
+              <th scope="col">{{ s.them_label | escape }}</th>
+              {%- if s.them2_label != blank -%}<th scope="col">{{ s.them2_label | escape }}</th>{%- endif -%}
+            {%- endif -%}
+          </tr>
+        </thead>
+        <tbody>
+          {%- if source -%}
+            {%- for row in source.rows -%}
+              <tr>
+                <th scope="row">{{ row.label | escape }}</th>
+                {%- for v in row.values -%}
+                  <td {% if forloop.first %}class="is-us"{% endif %}>
+                    {%- if v == 'yes' or v == true -%}{% render 'icon', name: 'check', class: 'icon--yes', label: 'Yes' %}
+                    {%- elsif v == 'no' or v == false -%}{% render 'icon', name: 'minus', class: 'icon--no', label: 'No' %}
+                    {%- else -%}{{ v | escape }}{%- endif -%}
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              <tr {{ block.shopify_attributes }}>
+                <th scope="row">{{ block.settings.label | escape }}</th>
+                {%- assign cells = block.settings.us | append: '|' | append: block.settings.them | append: '|' | append: block.settings.them2 | split: '|' -%}
+                {%- for v in cells -%}
+                  {%- if forloop.index == 3 and s.them2_label == blank -%}{%- continue -%}{%- endif -%}
+                  <td {% if forloop.first %}class="is-us"{% endif %}>
+                    {%- assign vd = v | strip | downcase -%}
+                    {%- if vd == 'yes' -%}{% render 'icon', name: 'check', class: 'icon--yes', label: 'Yes' %}
+                    {%- elsif vd == 'no' or vd == '' -%}{% render 'icon', name: 'minus', class: 'icon--no', label: 'No' %}
+                    {%- else -%}{{ v | strip | escape }}{%- endif -%}
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endfor -%}
+          {%- endif -%}
+        </tbody>
+      </table>
+    </div>
+    {%- if s.note != blank -%}<p class="text-xs text-muted center mt-4">{{ s.note | escape }}</p>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comparison table",
+  "class": "section-compare",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Compare" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Not all shavers are <em>safe</em> shavers." },
+    { "type": "text", "id": "us_label", "label": "Our column", "default": "Lastly" },
+    { "type": "text", "id": "them_label", "label": "Competitor column", "default": "Drugstore shaver" },
+    { "type": "text", "id": "them2_label", "label": "Second competitor (optional)", "default": "Lint roller" },
+    { "type": "checkbox", "id": "use_metafield", "label": "Use product metafield (PDP)", "info": "Reads custom.comparison JSON when available.", "default": false },
+    { "type": "text", "id": "note", "label": "Footnote", "default": "Comparison based on typical battery-operated shavers sold at US drugstores, [month year]." },
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Feature" },
+        { "type": "text", "id": "us", "label": "Lastly", "info": "'yes', 'no', or text", "default": "yes" },
+        { "type": "text", "id": "them", "label": "Competitor", "default": "no" },
+        { "type": "text", "id": "them2", "label": "Second competitor", "default": "no" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison table",
+      "blocks": [
+        { "type": "row", "settings": { "label": "Removes pills (not just lint)", "us": "yes", "them": "yes", "them2": "no" } },
+        { "type": "row", "settings": { "label": "Rigid guard, safe on cashmere", "us": "yes", "them": "no", "them2": "yes" } },
+        { "type": "row", "settings": { "label": "Rechargeable, any USB-C cable", "us": "yes", "them": "no", "them2": "no" } },
+        { "type": "row", "settings": { "label": "Runtime per charge", "us": "[90 min]", "them": "AA batteries", "them2": "—" } },
+        { "type": "row", "settings": { "label": "Replaceable blades", "us": "yes", "them": "no", "them2": "no" } },
+        { "type": "row", "settings": { "label": "30-day returns + [1-year warranty]", "us": "yes", "them": "no", "them2": "no" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

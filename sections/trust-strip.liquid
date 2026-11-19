@@ -1,0 +1,87 @@
+<section class="trust-strip{% if section.settings.raised %} section--raised{% endif %}" {{ section.shopify_attributes }}>
+  <div class="container">
+    {%- assign logos = section.blocks | where: 'type', 'logo' -%}
+    {%- assign usps = section.blocks | where: 'type', 'usp' -%}
+    {%- if logos.size > 0 -%}
+      <p class="eyebrow center mt-4">{{ section.settings.logos_heading | escape }}</p>
+      <ul class="trust-strip__logos list-unstyled" role="list">
+        {%- for block in logos -%}
+          <li {{ block.shopify_attributes }}>
+            {%- if block.settings.image -%}
+              {{ block.settings.image | image_url: height: 48 | image_tag: loading: 'lazy', alt: block.settings.name, height: 24 }}
+            {%- else -%}
+              <span class="eyebrow">{{ block.settings.name | escape }}</span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if usps.size > 0 -%}
+      <ul class="trust-strip__list" role="list">
+        {%- for block in usps limit: 4 -%}
+          <li class="trust-strip__item" {{ block.shopify_attributes }}>
+            {% render 'icon', name: block.settings.icon %}
+            <span>{{ block.settings.text | escape }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust strip",
+  "class": "section-trust",
+  "settings": [
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": false },
+    { "type": "text", "id": "logos_heading", "label": "Press logos heading", "default": "As seen in" }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "USP",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "return", "label": "Return" },
+            { "value": "battery", "label": "Battery" },
+            { "value": "usb-c", "label": "USB-C" },
+            { "value": "sweater", "label": "Sweater" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "clock", "label": "Clock" }
+          ],
+          "default": "shield"
+        },
+        { "type": "text", "id": "text", "label": "Text", "default": "Safe on cashmere" }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "Press logo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Logo" },
+        { "type": "text", "id": "name", "label": "Publication name (alt text)", "default": "[Publication]", "info": "Only add press you've actually received." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust strip",
+      "blocks": [
+        { "type": "usp", "settings": { "icon": "shield", "text": "Guard that keeps blades off the knit" } },
+        { "type": "usp", "settings": { "icon": "usb-c", "text": "Charges with any USB-C cable" } },
+        { "type": "usp", "settings": { "icon": "return", "text": "Free 30-day returns" } },
+        { "type": "usp", "settings": { "icon": "truck", "text": "Free US shipping over $60" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

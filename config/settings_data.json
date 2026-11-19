@@ -1,0 +1,21 @@
+{
+  "current": {
+    "logo_width": 112,
+    "checkout_provider": "shopify",
+    "show_express_checkout": true,
+    "free_shipping_threshold": 60,
+    "ship_min_days": 3,
+    "ship_max_days": 5,
+    "ship_cutoff_hour": 14,
+    "returns_line": "Free 30-day returns",
+    "cart_upsell_product": "blade-refill",
+    "cart_empty_collection": "shop"
+  },
+  "presets": {
+    "Default": {
+      "logo_width": 112,
+      "checkout_provider": "shopify",
+      "free_shipping_threshold": 60
+    }
+  }
+}

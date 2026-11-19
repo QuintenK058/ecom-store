@@ -1,0 +1,28 @@
+{%- comment -%} Active filter chips. Params: results {%- endcomment -%}
+{%- liquid
+  assign has_active = false
+  for filter in results.filters
+    if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil
+      assign has_active = true
+    endif
+  endfor
+-%}
+{%- if has_active -%}
+  {%- for filter in results.filters -%}
+    {%- for value in filter.active_values -%}
+      <a class="chip" href="{{ value.url_to_remove }}" data-facet-link>
+        {{ filter.label | escape }}: {{ value.label | escape }}
+        {% render 'icon', name: 'close', class: 'icon--sm', label: 'Remove' %}
+      </a>
+    {%- endfor -%}
+    {%- if filter.type == 'price_range' -%}
+      {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+        <a class="chip" href="{{ filter.url_to_remove }}" data-facet-link>
+          {{ filter.min_value.value | default: 0 | money_without_trailing_zeros }}–{{ filter.max_value.value | default: filter.range_max | money_without_trailing_zeros }}
+          {% render 'icon', name: 'close', class: 'icon--sm', label: 'Remove' %}
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  <a class="chip" href="{{ results.url | default: request.path }}{% if results.terms %}?q={{ results.terms | url_encode }}&type=product{% endif %}" data-facet-link>{{ 'collections.clear_all' | t }}</a>
+{%- endif -%}

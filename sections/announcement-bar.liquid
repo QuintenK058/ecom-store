@@ -1,0 +1,85 @@
+{%- liquid
+  assign messages = section.blocks | where: 'type', 'message'
+-%}
+{%- if messages.size > 0 -%}
+  <announcement-bar
+    class="announcement"
+    role="region"
+    aria-label="Announcements"
+    aria-roledescription="carousel"
+    data-speed="{{ section.settings.speed | times: 1000 }}"
+    {{ section.shopify_attributes }}
+  >
+    <div class="container announcement__inner">
+      {%- if messages.size > 1 -%}
+        <div class="announcement__pause">
+          <button
+            type="button"
+            class="icon-button"
+            data-pause
+            aria-pressed="false"
+            aria-label="{{ 'general.pause' | t }}"
+            data-pause-label="{{ 'general.pause' | t }}"
+            data-play-label="{{ 'general.play' | t }}"
+          >
+            <span data-icon-pause>{% render 'icon', name: 'pause', class: 'icon--sm' %}</span>
+            <span data-icon-play hidden>{% render 'icon', name: 'play', class: 'icon--sm' %}</span>
+          </button>
+        </div>
+      {%- endif -%}
+      <div class="announcement__slides" aria-live="off">
+        {%- for block in messages limit: 3 -%}
+          <p
+            class="announcement__slide{% if forloop.first %} is-active{% endif %}"
+            {% unless forloop.first %}aria-hidden="true"{% endunless %}
+            aria-roledescription="slide"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" data-track="announcement-{{ forloop.index }}">{{ block.settings.text | escape }}</a>
+            {%- else -%}
+              {{ block.settings.text | escape }}
+            {%- endif -%}
+          </p>
+        {%- endfor -%}
+      </div>
+      {%- if messages.size > 1 -%}
+        <div class="announcement__controls">
+          <button type="button" class="icon-button" data-prev aria-label="{{ 'general.previous' | t }}">{% render 'icon', name: 'chevron-left', class: 'icon--sm' %}</button>
+          <button type="button" class="icon-button" data-next aria-label="{{ 'general.next' | t }}">{% render 'icon', name: 'chevron-right', class: 'icon--sm' %}</button>
+        </div>
+      {%- endif -%}
+    </div>
+  </announcement-bar>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "section-announcement",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "range", "id": "speed", "label": "Rotate every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 5 }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free US shipping on orders over $60" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free US shipping on orders over $60" } },
+        { "type": "message", "settings": { "text": "Free 30-day returns. Try it on your favorite sweater." } },
+        { "type": "message", "settings": { "text": "The Pair: 2 shavers for $89. One for you, one to give." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+{%- comment -%}
+  Price with compare-at + optional "You save".
+  Params: product (required), variant (optional, defaults to selected/first available),
+          size: 'large' | blank, show_save: bool, js: bool (adds data hooks for variant updates)
+{%- endcomment -%}
+{%- liquid
+  assign target = variant | default: product.selected_or_first_available_variant
+  assign on_sale = false
+  if target.compare_at_price > target.price
+    assign on_sale = true
+  endif
+  assign varies = false
+  if variant == blank and product.price_varies
+    assign varies = true
+  endif
+-%}
+<div class="price{% if on_sale %} price--sale{% endif %}{% if size == 'large' %} price--large{% endif %}">
+  <span class="visually-hidden">{% if on_sale %}{{ 'products.sale_price' | t }}{% else %}{{ 'products.regular_price' | t }}{% endif %}</span>
+  <span class="price__current" {% if js %}data-price-current{% endif %}>
+    {%- if varies -%}
+      {%- assign min_price = product.price_min | money -%}
+      {{- 'products.from_price' | t: price: min_price -}}
+    {%- else -%}
+      {{- target.price | money -}}
+    {%- endif -%}
+  </span>
+  {%- if on_sale or js -%}
+    <s class="price__compare" {% if js %}data-price-compare{% endif %}{% unless on_sale %} hidden{% endunless %}>
+      {%- if on_sale -%}{{ target.compare_at_price | money }}{%- endif -%}
+    </s>
+  {%- endif -%}
+  {%- if show_save -%}
+    {%- liquid
+      assign save_template = 'products.you_save' | t: amount: '[amount]'
+      assign saved = target.compare_at_price | minus: target.price | money
+    -%}
+    <span
+      class="price__save"
+      {% if js %}data-price-save data-template="{{ save_template | escape }}"{% endif %}
+      {% unless on_sale %}hidden{% endunless %}
+    >
+      {%- if on_sale %}{{ 'products.you_save' | t: amount: saved }}{% endif -%}
+    </span>
+  {%- endif -%}
+</div>

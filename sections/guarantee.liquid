@@ -1,0 +1,53 @@
+{%- assign s = section.settings -%}
+<section class="section{% if s.raised %} section--raised{% endif %}" id="guarantee" {{ section.shopify_attributes }}>
+  <div class="container">
+    <div class="guarantee">
+      <div class="guarantee__seal" aria-hidden="true">
+        <span>{{ s.seal_number | escape }}<small>{{ s.seal_label | escape }}</small></span>
+      </div>
+      <h2 class="h1">{{ s.heading }}</h2>
+      <div class="lead rte">{{ s.text }}</div>
+      <ul class="cluster text-sm" role="list">
+        {%- for block in section.blocks -%}
+          <li class="cluster" {{ block.shopify_attributes }}>{% render 'icon', name: 'check', class: 'icon--sm' %} {{ block.settings.text | escape }}</li>
+        {%- endfor -%}
+      </ul>
+      {%- if s.cta_label != blank -%}
+        <a class="button" href="{{ s.cta_link | default: routes.all_products_collection_url }}" data-track="guarantee-cta">{{ s.cta_label | escape }}</a>
+      {%- endif -%}
+      {%- if s.policy_link != blank -%}
+        <a class="link text-sm" href="{{ s.policy_link }}">Read the full policy</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Guarantee",
+  "class": "section-guarantee",
+  "settings": [
+    { "type": "text", "id": "seal_number", "label": "Seal number", "default": "30" },
+    { "type": "text", "id": "seal_label", "label": "Seal label", "default": "Day trial" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Try it on your <em>favorite</em> sweater." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Use it for 30 days. If it doesn't make your knits look better, send it back for a full refund. Return shipping is on us.</p>" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Try it risk-free" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "url", "id": "policy_link", "label": "Policy link" },
+    { "type": "checkbox", "id": "raised", "label": "Tinted background", "default": false }
+  ],
+  "blocks": [
+    { "type": "point", "name": "Point", "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Free returns" }] }
+  ],
+  "presets": [
+    {
+      "name": "Guarantee",
+      "blocks": [
+        { "type": "point", "settings": { "text": "Free 30-day returns" } },
+        { "type": "point", "settings": { "text": "[1-year warranty]" } },
+        { "type": "point", "settings": { "text": "Real humans on email" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

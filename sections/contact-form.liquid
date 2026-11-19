@@ -1,0 +1,58 @@
+{%- assign s = section.settings -%}
+<div class="container section" {{ section.shopify_attributes }}>
+  <div class="contact-grid">
+    <div class="stack">
+      <p class="eyebrow">{{ s.eyebrow | escape }}</p>
+      <h1 class="h1">{{ s.heading }}</h1>
+      <p class="lead">{{ s.text | escape }}</p>
+      <ul class="contact-options" role="list">
+        {%- if s.email != blank -%}<li>{% render 'icon', name: 'mail' %}<span><strong>Email</strong><br><a href="mailto:{{ s.email }}">{{ s.email | escape }}</a></span></li>{%- endif -%}
+        <li>{% render 'icon', name: 'clock' %}<span><strong>Hours</strong><br>{{ s.hours | escape }}</span></li>
+        {%- if s.faq_link != blank -%}<li>{% render 'icon', name: 'chat' %}<span><strong>Quick answers</strong><br><a href="{{ s.faq_link }}">Read the FAQ</a></span></li>{%- endif -%}
+      </ul>
+    </div>
+    {%- form 'contact', id: 'ContactForm', class: 'stack' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-message form-message--success" role="status" tabindex="-1" autofocus>{{ 'contact.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+      <div class="field">
+        <label for="ContactName">{{ 'contact.name' | t }}</label>
+        <input id="ContactName" class="input" type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}">
+      </div>
+      <div class="field">
+        <label for="ContactEmail">{{ 'contact.email' | t }} <span aria-hidden="true">*</span></label>
+        <input id="ContactEmail" class="input" type="email" name="contact[email]" autocomplete="email" required aria-required="true" value="{{ form.email }}">
+      </div>
+      <div class="field">
+        <label for="ContactPhone">{{ 'contact.phone' | t }}</label>
+        <input id="ContactPhone" class="input" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}">
+      </div>
+      <div class="field">
+        <label for="ContactOrder">Order number (optional)</label>
+        <input id="ContactOrder" class="input" type="text" name="contact[order]" placeholder="#1001">
+      </div>
+      <div class="field">
+        <label for="ContactBody">{{ 'contact.message' | t }} <span aria-hidden="true">*</span></label>
+        <textarea id="ContactBody" class="textarea" name="contact[body]" required aria-required="true">{{ form.body }}</textarea>
+      </div>
+      <button type="submit" class="button" data-track="contact-submit">{{ 'contact.send' | t }}</button>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Contact" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Talk to a <em>human.</em>" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Questions about fabrics, orders or returns? We reply within one business day." },
+    { "type": "text", "id": "email", "label": "Email", "default": "[hello@lastlygoods.com]" },
+    { "type": "text", "id": "hours", "label": "Hours", "default": "Mon–Fri, 9am–5pm ET" },
+    { "type": "url", "id": "faq_link", "label": "FAQ link", "default": "/pages/faq" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

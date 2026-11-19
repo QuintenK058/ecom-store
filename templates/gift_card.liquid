@@ -1,0 +1,28 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ 'gift_cards.title' | t: value: gift_card.initial_value | money }} – {{ shop.name }}</title>
+    <meta name="robots" content="noindex">
+    {{ 'tokens.css' | asset_url | stylesheet_tag }}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    <main class="container">
+      <div class="gift-card">
+        <span class="wordmark">{{ shop.name | escape }}</span>
+        {%- assign gift_value = gift_card.initial_value | money -%}
+        <h1 class="h1">{{ 'gift_cards.title' | t: value: gift_value }}</h1>
+        {%- if gift_card.expired -%}<p class="form-message form-message--error">{{ 'gift_cards.expired' | t }}</p>{%- endif -%}
+        <p class="text-muted">{{ 'gift_cards.code' | t }}</p>
+        <p class="gift-card__code">{{ gift_card.code | format_code }}</p>
+        <p class="price price--large">{{ gift_card.balance | money }}</p>
+        <a class="button" href="{{ shop.url }}">{{ 'gift_cards.use' | t }}</a>
+        {%- if gift_card.pass_url -%}<a href="{{ gift_card.pass_url }}" class="link">Add to Apple Wallet</a>{%- endif -%}
+      </div>
+    </main>
+  </body>
+</html>

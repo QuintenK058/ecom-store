@@ -1,0 +1,184 @@
+{%- liquid
+  assign menu = section.settings.menu
+  assign feature = section.settings.featured_product
+-%}
+<sticky-header class="header-wrapper" {{ section.shopify_attributes }}>
+  <header class="header">
+    <div class="container header__inner">
+      <div class="header__left">
+        <button
+          type="button"
+          class="icon-button header__menu-toggle"
+          data-drawer-open="MenuDrawer"
+          aria-controls="MenuDrawer"
+          aria-expanded="false"
+          aria-label="{{ 'accessibility.open_menu' | t }}"
+        >
+          {% render 'icon', name: 'menu' %}
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          data-drawer-open="SearchModal"
+          aria-controls="SearchModal"
+          aria-expanded="false"
+          aria-label="{{ 'general.search' | t }}"
+          data-track="header-search"
+        >
+          {% render 'icon', name: 'search' %}
+        </button>
+      </div>
+
+      <a class="header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} — {{ 'general.home' | t }}">
+        {%- if settings.logo -%}
+          {{
+            settings.logo
+            | image_url: width: 480
+            | image_tag: widths: '120, 240, 360, 480', sizes: '120px', alt: shop.name, loading: 'eager', fetchpriority: 'high', class: 'header__logo-img'
+          }}
+        {%- else -%}
+          <span class="wordmark">{{ shop.name | escape }}</span>
+        {%- endif -%}
+      </a>
+
+      <nav class="header__nav" aria-label="Main">
+        <ul role="list">
+          {%- for link in menu.links limit: 5 -%}
+            <li>
+              <a href="{{ link.url }}" {% if link.current %}aria-current="page"{% endif %} data-track="nav-{{ link.handle }}">{{ link.title | escape }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <div class="header__icons">
+        {%- if shop.customer_accounts_enabled -%}
+          <a class="icon-button header__account" href="{{ routes.account_url }}" aria-label="{{ 'general.account' | t }}">
+            {% render 'icon', name: 'user' %}
+          </a>
+        {%- endif -%}
+        <a
+          class="icon-button"
+          href="{{ routes.cart_url }}"
+          data-drawer-open="CartDrawer"
+          aria-controls="CartDrawer"
+          aria-expanded="false"
+          data-cart-label
+          aria-label="{{ 'general.cart' | t }}, {{ 'accessibility.cart_count' | t: count: cart.item_count }}"
+          data-track="header-cart"
+        >
+          {% render 'icon', name: 'bag' %}
+          <span class="cart-count" data-cart-count aria-hidden="true" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+        </a>
+      </div>
+    </div>
+  </header>
+</sticky-header>
+
+{%- comment -%} Mobile menu drawer {%- endcomment -%}
+<modal-drawer id="MenuDrawer" class="drawer drawer--left" aria-hidden="true">
+  <div class="drawer__overlay" data-drawer-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}">
+    <div class="drawer__header">
+      <span class="wordmark">{{ shop.name | escape }}</span>
+      <button type="button" class="icon-button" data-drawer-close aria-label="{{ 'accessibility.close_menu' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="drawer__body">
+      <nav class="menu-drawer__nav" aria-label="Mobile">
+        <ul role="list">
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <details>
+                  <summary>{{ link.title | escape }} {% render 'icon', name: 'chevron-down', class: 'icon--sm' %}</summary>
+                  <ul role="list">
+                    {%- for child in link.links -%}
+                      <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a href="{{ link.url }}" {% if link.current %}aria-current="page"{% endif %}>
+                  {{- link.title | escape -}}
+                  {% render 'icon', name: 'chevron-right', class: 'icon--sm' %}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      {%- if feature != blank -%}
+        <a class="menu-drawer__feature" href="{{ feature.url }}" data-track="menu-feature">
+          <div class="media media--square">
+            {%- if feature.featured_media -%}
+              {{ feature.featured_media | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100, 200', sizes: '96px', alt: feature.title }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <div class="stack-sm">
+            <p class="eyebrow">{{ section.settings.feature_label | escape }}</p>
+            <p class="card__title">{{ feature.title | escape }}</p>
+            {% render 'price', product: feature %}
+          </div>
+        </a>
+      {%- endif -%}
+
+      <div class="menu-drawer__secondary">
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}">{% render 'icon', name: 'user', class: 'icon--sm' %} {{ 'general.account' | t }}</a>
+        {%- endif -%}
+        {%- for link in section.settings.secondary_menu.links -%}
+          <a href="{{ link.url }}">{{ link.title | escape }}</a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</modal-drawer>
+
+{%- comment -%} Search modal with predictive results {%- endcomment -%}
+<modal-drawer id="SearchModal" class="search-modal" aria-hidden="true">
+  <div class="drawer__overlay" data-drawer-close></div>
+  <div class="search-modal__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.search' | t }}">
+    <div class="container">
+      <predictive-search>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+          <label class="visually-hidden" for="PredictiveSearchInput">{{ 'search.placeholder' | t }}</label>
+          <input
+            id="PredictiveSearchInput"
+            class="input"
+            type="search"
+            name="q"
+            placeholder="{{ 'search.placeholder' | t }}"
+            autocomplete="off"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls="PredictiveSearchResults"
+            aria-autocomplete="list"
+            data-autofocus
+          >
+          <input type="hidden" name="type" value="product">
+          <button type="submit" class="icon-button" aria-label="{{ 'search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+          <button type="button" class="icon-button" data-drawer-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+        </form>
+        <div id="PredictiveSearchResults" class="predictive-results" data-predictive-results></div>
+        <p class="visually-hidden" role="status" aria-live="polite" data-predictive-status></p>
+      </predictive-search>
+    </div>
+  </div>
+</modal-drawer>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Main menu (max 5 shown on desktop)", "default": "main-menu" },
+    { "type": "link_list", "id": "secondary_menu", "label": "Mobile drawer: secondary links", "default": "footer" },
+    { "type": "header", "content": "Mobile menu feature tile" },
+    { "type": "product", "id": "featured_product", "label": "Featured product" },
+    { "type": "text", "id": "feature_label", "label": "Feature label", "default": "Start here" }
+  ]
+}
+{% endschema %}

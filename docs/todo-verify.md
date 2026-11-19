@@ -27,3 +27,22 @@ or legal — or removed. FTC: no claim ships without substantiation.
 ## Brand
 - [ ] USPTO trademark search for "Lastly" (Class 8 hand tools / Class 21 / Class 3) before any spend
 - [ ] All before/after photos are real and unretouched (document originals)
+
+## Copy claims added in the theme
+- [ ] Support email [hello@lastlygoods.com] (footer, contact page) — set up a real inbox
+- [ ] Same-day shipping before [2pm ET] on business days; [3–5] business-day US delivery
+- [ ] [Return shipping is on us] (guarantee + FAQ)
+- [ ] Blade replacement interval [6 months]; refill includes 2 heads
+- [ ] What's included: [spare blade head], cleaning brush, USB-C cable
+- [ ] Weight [5.3 oz], full charge time [2 hr], [15+] sweaters per charge
+- [ ] Comparison footnote date [month year] and that drugstore models really lack each feature
+- [ ] Founder story (homepage + About) — replace bracketed placeholder with the real story
+- [ ] "Ships to all 50 states / not outside US" (FAQ)
+- [ ] 10% off first order (popup, footer) — create the discount + Klaviyo/Shopify welcome flow
+- [ ] BNPL line ("4 interest-free payments … with Shop Pay") — only if Shop Pay Installments is enabled
+- [ ] Press logos — only add real coverage
+
+## Legal (templates only — must be reviewed by you/a lawyer)
+- [ ] Refund, Privacy, Terms, Shipping policies: generate in Settings → Policies, then review
+- [ ] Shipping & Returns page content
+- [ ] Email marketing consent wording (popup, footer, register)

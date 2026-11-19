@@ -1,0 +1,30 @@
+{%- comment -%}
+  Star rating from the standard reviews metafields (written by any review app).
+  Renders NOTHING when there are no real reviews — never fake social proof (FTC).
+  Params: product (required), link: url/anchor (optional), show_count: bool (default true)
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign count = product.metafields.reviews.rating_count.value | default: 0
+-%}
+{%- if rating != blank and count > 0 -%}
+  {%- liquid
+    assign rating_value = rating.rating | default: rating
+    assign scale_max = rating.scale_max | default: 5
+    assign pct = rating_value | divided_by: scale_max | times: 100.0 | round: 1
+    assign rounded = rating_value | round: 1
+  -%}
+  {%- capture inner -%}
+    <span class="rating__stars" style="--pct: {{ pct }}%;" aria-hidden="true"></span>
+    <span class="visually-hidden">{{ 'accessibility.star_rating' | t: rating: rounded }}</span>
+    <span class="rating__count">
+      <span aria-hidden="true">{{ rounded }}</span>
+      {%- unless show_count == false %} ({{ 'accessibility.reviews_count' | t: count: count }}){% endunless -%}
+    </span>
+  {%- endcapture -%}
+  {%- if link != blank -%}
+    <a class="rating" href="{{ link }}">{{ inner }}</a>
+  {%- else -%}
+    <div class="rating">{{ inner }}</div>
+  {%- endif -%}
+{%- endif -%}
